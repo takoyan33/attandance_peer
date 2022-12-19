@@ -8,6 +8,7 @@ import { collection, addDoc, onSnapshot, getDocs } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { query, orderBy } from "firebase/firestore";
 import { useForm } from "react-hook-form";
+import { InputBase } from "@mantine/core";
 
 import {
   createStyles,
@@ -37,11 +38,12 @@ export default function Home() {
     addDoc(usersRef, {
       fullname: data.fullname,
       univernumber: data.univernumber,
-      univeryear: data.univeryear,
+      grade: data.grade,
       createtime: newdate,
+      present: true,
     })
       .then(() => {
-        alert("a");
+        alert("ユーザー登録しました");
         router.push("/");
       })
       .catch((err: any) => {
@@ -81,15 +83,25 @@ export default function Home() {
             <div>
               <label htmlFor="univernumber">学籍番号</label>
               <Input
-                type="number"
+                type="text"
                 id="univernumber"
                 {...register("univernumber")}
               />
+
+              <InputBase
+                label="年度"
+                component="select"
+                mt="md"
+                id="grade"
+                {...register("grade")}
+              >
+                <option value="インターン">インターン</option>
+                <option value="1年目">1年目</option>
+                <option value="2年目">2年目</option>
+                <option value="アドバイザー">アドバイザー</option>
+              </InputBase>
             </div>
-            <div>
-              <label htmlFor="univeryear">学年</label>
-              <Input type="text" id="univeryear" {...register("univeryear")} />
-            </div>
+
             <button type="submit">送信</button>
           </form>
         </div>

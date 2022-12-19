@@ -8,16 +8,8 @@ import { collection, addDoc, onSnapshot, getDocs } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { query, orderBy } from "firebase/firestore";
 import { useForm } from "react-hook-form";
-
-import {
-  createStyles,
-  Table,
-  Checkbox,
-  ScrollArea,
-  Group,
-  Avatar,
-  Text,
-} from "@mantine/core";
+import { Input } from "@mantine/core";
+import { Button } from "@mantine/core";
 
 export default function Home() {
   const { register, handleSubmit } = useForm();
@@ -35,13 +27,14 @@ export default function Home() {
     //日本時間を代入
     //写真のurlをセットする
     addDoc(databaseRef, {
-      title: data.univernumber,
-      date: data.date,
+      title: data.title,
+      date: data.date.toLocaleString("ja-JP"),
+      datedata: data.date,
       body: data.body,
       createtime: newdate,
     })
       .then(() => {
-        alert("ユーザーを登録しました");
+        alert("会議を登録しました");
         router.push("/");
       })
       .catch((err: any) => {
@@ -76,17 +69,21 @@ export default function Home() {
           <form onSubmit={handleSubmit(addDate)}>
             <div>
               <label htmlFor="title">タイトル</label>
-              <input type="text" id="title" {...register("title")} />
+              <Input type="text" id="title" {...register("title")} />
             </div>
             <div>
               <label htmlFor="date">日付</label>
-              <input type="date" id="date" {...register("date")} />
+              <Input type="date" id="date" {...register("date")} />
             </div>
             <div>
               <label htmlFor="body">内容</label>
-              <input type="text" id="body" {...register("body")} />
+              <Input type="text" id="body" {...register("body")} />
             </div>
-            <button type="submit">送信</button>
+            <div className="my-4 text-center">
+              <Button type="submit" variant="outline" color="cyan">
+                送信
+              </Button>
+            </div>
           </form>
         </div>
       </div>

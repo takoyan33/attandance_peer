@@ -1,5 +1,5 @@
 import Head from "next/head";
-import "tailwindcss/tailwind.css";
+import Image from "next/image";
 import { Inter } from "@next/font/google";
 import { Input } from "@mantine/core";
 import { useState, useEffect } from "react";
@@ -9,6 +9,16 @@ import { useRouter } from "next/router";
 import { query, orderBy } from "firebase/firestore";
 import { useForm } from "react-hook-form";
 import { InputBase } from "@mantine/core";
+
+import {
+  createStyles,
+  Table,
+  Checkbox,
+  ScrollArea,
+  Group,
+  Avatar,
+  Text,
+} from "@mantine/core";
 
 export default function Home() {
   const { register, handleSubmit } = useForm();
@@ -28,11 +38,12 @@ export default function Home() {
     addDoc(usersRef, {
       fullname: data.fullname,
       univernumber: data.univernumber,
-      univeryear: data.univeryear,
+      grade: data.grade,
       createtime: newdate,
+      present: true,
     })
       .then(() => {
-        alert("a");
+        alert("ユーザー登録しました");
         router.push("/");
       })
       .catch((err: any) => {
@@ -66,34 +77,17 @@ export default function Home() {
         <div>
           <form onSubmit={handleSubmit(addDate)}>
             <div>
-              <label htmlFor="fullname">名前</label>
+              <label htmlFor="fullname">メールアドレス</label>
               <Input type="text" id="fullname" {...register("fullname")} />
             </div>
-            <div>
-              <label htmlFor="univernumber">学籍番号</label>
-              <Input
-                type="number"
-                id="univernumber"
-                {...register("univernumber")}
-              />
-            </div>
-            <div>
-              {/* <label htmlFor="univeryear"></label>
-              <Input type="text" id="univeryear" {...register("univeryear")} /> */}
 
-              <InputBase
-                label="学年"
-                component="select"
-                mt="md"
-                id="univeryear"
-                {...register("univeryear")}
-              >
-                <option value="インターン">インターン</option>
-                <option value="1年目">1年目</option>
-                <option value="2年目">2年目</option>
-                <option value="アドバイザー">アドバイザー</option>
-              </InputBase>
-            </div>
+            <label htmlFor="univernumber">パスワード</label>
+            <Input
+              type="text"
+              id="univernumber"
+              {...register("univernumber")}
+            />
+
             <button type="submit">送信</button>
           </form>
         </div>
