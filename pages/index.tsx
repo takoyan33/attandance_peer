@@ -32,6 +32,7 @@ import {
   Text,
 } from "@mantine/core";
 import { MuiNavbar } from "../components/MuiNavbar";
+import Modal from "react-modal";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -73,7 +74,32 @@ interface CardGradientProps {
   onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
+const customStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+  },
+};
+
 export default function Home() {
+  let subtitle: HTMLHeadingElement | null;
+  const [modalIsOpen, setIsOpen] = useState<boolean>(false);
+
+  // function openModal() {
+  //   setIsOpen(true);
+  // }
+
+  function afterOpenModal() {
+    if (subtitle) subtitle.style.color = "#f00";
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+  }
   type FormData = {
     univernumber: number;
   };
@@ -127,6 +153,7 @@ export default function Home() {
   const getID = (id: any, date: any, title: any) => {
     setTitle(title);
     setDate(date);
+    setIsOpen(true);
     setID(id);
     setIsUpdate(true);
     console.log(ID);
@@ -146,6 +173,7 @@ export default function Home() {
 
   const closeaddPresent = (id: any) => {
     setID(id);
+    setIsOpen(false);
     setIsUpdate(false);
     console.log(ID);
   };
@@ -200,10 +228,8 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <MuiNavbar />
-
-      <div className="max-w-5xl m-auto">
+      <div className="max-w-5xl m-auto" id="APP">
         <h2 className="text-center text-2xl font-bold mb-6 mt-10">
           ピアサポータル出席管理
         </h2>
@@ -292,42 +318,6 @@ export default function Home() {
           </>
         )}
 
-        {isUpdate && (
-          <div>
-            <p>
-              おはようございます。<br></br>
-              {title}の{date}日の出席登録ができます。
-            </p>
-            <form onSubmit={handleSubmit(updatefields)}>
-              <p>
-                <label htmlFor="univernumber">学籍番号</label>
-                <Input
-                  type="number"
-                  id="univernumber"
-                  {...register("univernumber")}
-                />
-              </p>
-              <div className="text-center m-auto my-4">
-                <span className="m-2">
-                  <Button type="submit" variant="outline" color="cyan">
-                    出席登録する
-                  </Button>
-                </span>
-                <span className="m-2">
-                  <Button
-                    type="submit"
-                    variant="outline"
-                    color="cyan"
-                    onClick={closeaddPresent}
-                  >
-                    取り消し
-                  </Button>
-                </span>
-              </div>
-            </form>
-          </div>
-        )}
-
         {/* {meeting &&
           meeting.map((meeting) => (
             <div key={meeting.id}>
@@ -383,6 +373,48 @@ export default function Home() {
               </Button>
             </div>
           ))} */}
+
+        <Modal
+          contentLabel="Example Modal"
+          isOpen={modalIsOpen}
+          style={customStyles}
+          onAfterOpen={afterOpenModal}
+          onRequestClose={closeModal}
+        >
+          <div>
+            <p>
+              おはようございます。<br></br>
+              {title}の{date}日の出席登録ができます。
+            </p>
+            <form onSubmit={handleSubmit(updatefields)}>
+              <p>
+                <label htmlFor="univernumber">学籍番号</label>
+                <Input
+                  type="number"
+                  id="univernumber"
+                  {...register("univernumber")}
+                />
+              </p>
+              <div className="text-center m-auto my-4">
+                <span className="m-2">
+                  <Button type="submit" variant="outline" color="cyan">
+                    出席登録する
+                  </Button>
+                </span>
+                <span className="m-2">
+                  <Button
+                    type="submit"
+                    variant="outline"
+                    color="cyan"
+                    onClick={closeaddPresent}
+                  >
+                    取り消し
+                  </Button>
+                </span>
+              </div>
+            </form>
+          </div>
+        </Modal>
 
         {meeting &&
           meeting.map((meeting) => (
