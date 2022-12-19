@@ -31,7 +31,11 @@ import {
 } from "@mantine/core";
 
 export default function Home() {
-  const { register, handleSubmit } = useForm();
+  type FormData = {
+    univernumber: number;
+  };
+
+  const { register, handleSubmit } = useForm<FormData>();
   const [title, setTitle] = useState("");
   const [meeting, setMeeting] = useState<any[]>([]);
   const [ID, setID] = useState<any>(null);
@@ -61,7 +65,7 @@ export default function Home() {
   //     });
   // };
 
-  const updatefields = (data: any) => {
+  const updatefields = (data: FormData) => {
     //更新する
     let fieldToEdit = doc(database, "meeting", ID);
     //セットしたIDをセットする
@@ -127,7 +131,17 @@ export default function Home() {
       <div className="max-w-5xl m-auto">
         <div className="m-3">
           <Button variant="outline" color="cyan">
+            <Link href="meeting/new">管理者ログイン</Link>
+          </Button>
+        </div>
+        <div className="m-3">
+          <Button variant="outline" color="cyan">
             <Link href="meeting/new">会議を登録する</Link>
+          </Button>
+        </div>
+        <div className="m-3">
+          <Button variant="outline" color="cyan">
+            <Link href="user/new">学生を編集する</Link>
           </Button>
         </div>
         <div className="m-3">
@@ -177,7 +191,7 @@ export default function Home() {
                 />
               </p>
               <Button type="submit" variant="outline" color="cyan">
-                送信
+                出席登録する
               </Button>
             </form>
 
@@ -231,8 +245,8 @@ export default function Home() {
                                     </Text>
                                   </Group>
                                 </td>
-                                <td>{user.grade}</td>
                                 <td>{user.univernumber}</td>
+                                <td>{user.grade}</td>
                               </tr>
                             ))}
                         </tbody>
