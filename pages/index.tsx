@@ -20,7 +20,6 @@ import { query, orderBy } from "firebase/firestore";
 import { useForm } from "react-hook-form";
 import { Button } from "@mantine/core";
 import { Input } from "@mantine/core";
-import { useModal } from "react-hooks-use-modal";
 import { Legend, PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import {
   createStyles,
@@ -45,7 +44,6 @@ const useStyles = createStyles((theme) => ({
 
     "&:hover": {
       boxShadow: theme.shadows.md,
-      transform: "scale(1.02)",
     },
 
     "&::before": {
@@ -130,6 +128,23 @@ export default function Home() {
         console.log(err);
       });
   };
+
+    const deletefields = (data: FormData) => {
+      //更新する
+      let fieldToEdit = doc(database, "meeting", ID);
+      //セットしたIDをセットする
+      updateDoc(fieldToEdit, {
+        attandece: arrayRemove(data.univernumber),
+      })
+        .then(() => {
+          setIsUpdate(false);
+          alert("出席を削除しました");
+          router.push("/");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
   useEffect(() => {
     const usersCollectionRef = collection(database, "users");
     onSnapshot(usersCollectionRef, (querySnapshot) => {
@@ -465,7 +480,7 @@ export default function Home() {
                   className=" my-2 m-4"
                   onClick={() => getID(meeting.id, meeting.date, meeting.title)}
                 >
-                  出席を変更する
+                  欠席に変更する
                 </Button>
               </Paper>
             </div>

@@ -9,16 +9,7 @@ import { useRouter } from "next/router";
 import { query, orderBy } from "firebase/firestore";
 import { useForm } from "react-hook-form";
 import { InputBase } from "@mantine/core";
-
-import {
-  createStyles,
-  Table,
-  Checkbox,
-  ScrollArea,
-  Group,
-  Avatar,
-  Text,
-} from "@mantine/core";
+import { MuiNavbar } from "../../components/MuiNavbar";
 
 export default function Home() {
   const { register, handleSubmit } = useForm();
@@ -70,6 +61,8 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
+      <MuiNavbar />
 
       <div className="max-w-5xl m-auto">
         <h2>ユーザーを登録する</h2>

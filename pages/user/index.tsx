@@ -8,6 +8,7 @@ import { collection, addDoc, onSnapshot, getDocs } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { query, orderBy } from "firebase/firestore";
 import { useForm } from "react-hook-form";
+import { MuiNavbar } from "../../components/MuiNavbar";
 import { InputBase } from "@mantine/core";
 
 export default function Home() {
@@ -59,7 +60,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
+      <MuiNavbar />
       <div className="max-w-5xl m-auto">
         <h2>ユーザーを登録する</h2>
 

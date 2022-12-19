@@ -54,12 +54,13 @@ export const MuiNavbar = () => {
             sx={{ flexGrow: 1, textAlign: "left" }}
           >
             <Link href="/">
-              <Image
+              {/* <Image
                 src="/magastudylogo.png"
                 width="200"
                 height="30"
                 alt="ロゴ"
-              />
+              /> */}
+              ピアサポータル
             </Link>
           </Typography>
           <Tooltip title="Account settings">
