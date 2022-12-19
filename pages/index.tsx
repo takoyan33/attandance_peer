@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { Paper, ThemeIcon } from "@mantine/core";
 import { database } from "../firebaseConfig";
 import {
   collection,
@@ -30,12 +31,53 @@ import {
   Avatar,
   Text,
 } from "@mantine/core";
+import { MuiNavbar } from "../components/MuiNavbar";
+
+const useStyles = createStyles((theme) => ({
+  card: {
+    position: "relative",
+    cursor: "pointer",
+    overflow: "hidden",
+    transition: "transform 150ms ease, box-shadow 100ms ease",
+    padding: theme.spacing.xl,
+    paddingLeft: theme.spacing.xl * 2,
+
+    "&:hover": {
+      boxShadow: theme.shadows.md,
+      transform: "scale(1.02)",
+    },
+
+    "&::before": {
+      content: '""',
+      position: "absolute",
+      top: 0,
+      bottom: 0,
+      left: 0,
+      width: 6,
+      backgroundImage: theme.fn.linearGradient(
+        0,
+        theme.colors.pink[6],
+        theme.colors.orange[6]
+      ),
+    },
+  },
+}));
+
+interface CardGradientProps {
+  title: string;
+  date: string;
+  present: string;
+  absent: any;
+  wariai: any;
+  id: any;
+  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+}
 
 export default function Home() {
   type FormData = {
     univernumber: number;
   };
-
+  const { classes } = useStyles();
   const { register, handleSubmit } = useForm<FormData>();
   const [IsPresent, setIsPresent] = useState(false);
   const [meeting, setMeeting] = useState<any[]>([]);
@@ -159,118 +201,13 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      <MuiNavbar />
+
       <div className="max-w-5xl m-auto">
-        <div className="m-3">
-          <Button variant="outline" color="cyan">
-            <Link href="admin/login">管理者ログイン</Link>
-          </Button>
-        </div>
-        <div className="m-3">
-          <Button variant="outline" color="cyan">
-            <Link href="meeting/new">会議を登録する</Link>
-          </Button>
-        </div>
-        <div className="m-3">
-          <Button variant="outline" color="cyan">
-            <Link href="user/new">学生を編集する</Link>
-          </Button>
-        </div>
-        <div className="m-3">
-          <Button variant="outline" color="cyan">
-            <Link href="user/new">学生を登録する</Link>
-          </Button>
-        </div>
-        <div className="m-3">
-          <Button variant="outline" color="cyan">
-            <Link href="user">ユーザー別出席確認</Link>
-          </Button>
-        </div>
-        <h2 className="text-center text-2xl font-bold my-2">
+        <h2 className="text-center text-2xl font-bold mb-6 mt-10">
           ピアサポータル出席管理
         </h2>
         <h2 className="text-center">会議一覧{meeting.length}件</h2>
-
-        {isUpdate && (
-          <div>
-            <p>
-              おはようございます。<br></br>
-              {title}の{date}日の出席登録ができます。
-            </p>
-            <form onSubmit={handleSubmit(updatefields)}>
-              <p>
-                <label htmlFor="univernumber">学籍番号</label>
-                <Input
-                  type="number"
-                  id="univernumber"
-                  {...register("univernumber")}
-                />
-              </p>
-              <div className="text-center m-auto my-4">
-                <span className="m-2">
-                  <Button type="submit" variant="outline" color="cyan">
-                    出席登録する
-                  </Button>
-                </span>
-                <span className="m-2">
-                  <Button
-                    type="submit"
-                    variant="outline"
-                    color="cyan"
-                    onClick={closeaddPresent}
-                  >
-                    取り消し
-                  </Button>
-                </span>
-              </div>
-            </form>
-          </div>
-        )}
-        {meeting &&
-          meeting.map((meeting) => (
-            <div key={meeting.id}>
-              <h2>{meeting.title}</h2>
-              <h3>日付：{meeting.date}</h3>
-              <p>
-                出席{meeting.attandece?.length}人 欠席
-                {users.length - meeting.attandece?.length}人 出席率
-                {Math.floor((meeting.attandece?.length / users.length) * 100)}％
-              </p>
-              <Button
-                variant="outline"
-                color="cyan"
-                className=" my-2 m-4"
-                onClick={() => getID(meeting.id, meeting.date, meeting.title)}
-              >
-                出席登録する
-              </Button>
-              <Button
-                variant="outline"
-                color="cyan"
-                className=" my-2 m-4"
-                onClick={() => getPresent(meeting.id)}
-              >
-                出席票を見る
-              </Button>
-              {IsPresent && (
-                <Button
-                  type="submit"
-                  variant="outline"
-                  color="cyan"
-                  onClick={() => closePresent(meeting.id)}
-                >
-                  出席票を閉じる
-                </Button>
-              )}
-              <Button
-                variant="outline"
-                color="cyan"
-                className=" my-2 m-4"
-                onClick={() => getID(meeting.id, meeting.date, meeting.title)}
-              >
-                出席を変更する
-              </Button>
-            </div>
-          ))}
 
         {IsPresent && (
           <>
@@ -292,9 +229,6 @@ export default function Home() {
                           {users &&
                             users.map((user) => (
                               <tr key={user.id}>
-                                {/* {meeting.id} */}
-                                {/* {meeting.attandece} */}
-                                {/* {user.univernumber} */}
                                 <td>
                                   {meeting.attandece &&
                                     meeting.attandece.map(
@@ -357,6 +291,153 @@ export default function Home() {
             </div> */}
           </>
         )}
+
+        {isUpdate && (
+          <div>
+            <p>
+              おはようございます。<br></br>
+              {title}の{date}日の出席登録ができます。
+            </p>
+            <form onSubmit={handleSubmit(updatefields)}>
+              <p>
+                <label htmlFor="univernumber">学籍番号</label>
+                <Input
+                  type="number"
+                  id="univernumber"
+                  {...register("univernumber")}
+                />
+              </p>
+              <div className="text-center m-auto my-4">
+                <span className="m-2">
+                  <Button type="submit" variant="outline" color="cyan">
+                    出席登録する
+                  </Button>
+                </span>
+                <span className="m-2">
+                  <Button
+                    type="submit"
+                    variant="outline"
+                    color="cyan"
+                    onClick={closeaddPresent}
+                  >
+                    取り消し
+                  </Button>
+                </span>
+              </div>
+            </form>
+          </div>
+        )}
+
+        {/* {meeting &&
+          meeting.map((meeting) => (
+            <div key={meeting.id}>
+              <CardGradient
+                id={meeting.id}
+                title={meeting.title}
+                date={meeting.date}
+                present={meeting.attandece?.length}
+                absent={users.length - meeting.attandece?.length}
+                wariai={Math.floor(
+                  (meeting.attandece?.length / users.length) * 100
+                )}
+                onClick={}
+              /> */}
+        {/* <h2>{meeting.title}</h2>
+              <h3>日付：{meeting.date}</h3> */}
+        {/* 出席{meeting.attandece?.length}人 欠席
+                {users.length - meeting.attandece?.length}人 出席率 */}
+        {/* {Math.floor((meeting.attandece?.length / users.length) * 100)}％ */}
+        {/* <Button
+                variant="outline"
+                color="cyan"
+                className=" my-2 m-4"
+                onClick={() => getID(meeting.id, meeting.date, meeting.title)}
+              >
+                出席登録する
+              </Button>
+              <Button
+                variant="outline"
+                color="cyan"
+                className=" my-2 m-4"
+                onClick={() => getPresent(meeting.id)}
+              >
+                出席票を見る
+              </Button>
+              {IsPresent && (
+                <Button
+                  type="submit"
+                  variant="outline"
+                  color="cyan"
+                  onClick={() => closePresent(meeting.id)}
+                >
+                  出席票を閉じる
+                </Button>
+              )}
+              <Button
+                variant="outline"
+                color="cyan"
+                className=" my-2 m-4"
+                onClick={() => getID(meeting.id, meeting.date, meeting.title)}
+              >
+                出席を変更する
+              </Button>
+            </div>
+          ))} */}
+
+        {meeting &&
+          meeting.map((meeting) => (
+            <div key={meeting.id} className="my-4">
+              <Paper withBorder radius="md" className={classes.card}>
+                <Text size="xl" weight={500} mt="md">
+                  {meeting.title}
+                </Text>
+                <Text size="sm" mt="sm" color="dimmed">
+                  日付：{meeting.date}
+                  開催前
+                </Text>
+                <Text size="sm" mt="sm" color="dimmed">
+                  出席{meeting.attandece?.length}人 欠席
+                  {users.length - meeting.attandece?.length}人 出席率
+                  {Math.floor((meeting.attandece?.length / users.length) * 100)}
+                  ％
+                </Text>
+                <Button
+                  variant="outline"
+                  color="cyan"
+                  className=" my-2 m-4"
+                  onClick={() => getID(meeting.id, meeting.date, meeting.title)}
+                >
+                  出席登録する
+                </Button>
+                <Button
+                  variant="outline"
+                  color="cyan"
+                  className=" my-2 m-4"
+                  onClick={() => getPresent(meeting.id)}
+                >
+                  出席票を見る
+                </Button>
+                {IsPresent && (
+                  <Button
+                    type="submit"
+                    variant="outline"
+                    color="cyan"
+                    onClick={() => closePresent(meeting.id)}
+                  >
+                    出席票を閉じる
+                  </Button>
+                )}
+                <Button
+                  variant="outline"
+                  color="cyan"
+                  className=" my-2 m-4"
+                  onClick={() => getID(meeting.id, meeting.date, meeting.title)}
+                >
+                  出席を変更する
+                </Button>
+              </Paper>
+            </div>
+          ))}
       </div>
     </>
   );
