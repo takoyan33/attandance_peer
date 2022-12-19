@@ -1,14 +1,25 @@
 import Head from "next/head";
 import Image from "next/image";
 import { Inter } from "@next/font/google";
-
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import { database } from "../firebaseConfig";
-import { collection, addDoc, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  onSnapshot,
+  getDocs,
+  doc,
+  getDoc,
+  updateDoc,
+  deleteDoc,
+  arrayUnion,
+  arrayRemove,
+} from "firebase/firestore";
 import { useRouter } from "next/router";
 import { query, orderBy } from "firebase/firestore";
 import { useForm } from "react-hook-form";
-
+import { Button } from "@mantine/core";
 import {
   createStyles,
   Table,
@@ -22,6 +33,10 @@ import {
 export default function Home() {
   const { register, handleSubmit } = useForm();
   const [title, setTitle] = useState("");
+  const [meeting, setMeeting] = useState<any[]>([]);
+  const [ID, setID] = useState<any>(null);
+  const [isUpdate, setIsUpdate] = useState(false);
+  const [attandece, setAttandece] = useState(null);
   const [users, setUsers] = useState<any[]>([]);
   const databaseRef = collection(database, "meeting");
   const router = useRouter();
@@ -29,37 +44,77 @@ export default function Home() {
   //新しい順
   const q = query(usersRef, orderBy("timestamp", "desc"));
 
-  const addDate = (data: any) => {
-    const newdate = new Date().toLocaleString("ja-JP");
-    //日本時間を代入
-    //写真のurlをセットする
-    addDoc(databaseRef, {
-      title: data.univernumber,
-      createtime: newdate,
+  // const addDate = (data: any) => {
+  //   const newdate = new Date().toLocaleString("ja-JP");
+  //   //日本時間を代入
+  //   //写真のurlをセットする
+  //   addDoc(databaseRef, {
+  //     title: data.univernumber,
+  //     createtime: newdate,
+  //   })
+  //     .then(() => {
+  //       alert("a");
+  //       router.push("/");
+  //     })
+  //     .catch((err: any) => {
+  //       console.error(err);
+  //     });
+  // };
+
+  const updatefields = (data: any) => {
+    //更新する
+    let fieldToEdit = doc(database, "meeting", ID);
+    //セットしたIDをセットする
+    updateDoc(fieldToEdit, {
+      attandece: arrayUnion(data.univernumber),
     })
       .then(() => {
-        alert("a");
+        setIsUpdate(false);
+        alert("出席登録しました");
         router.push("/");
       })
-      .catch((err: any) => {
-        console.error(err);
+      .catch((err) => {
+        console.log(err);
       });
   };
 
-  // 新着順…
-  const getallUsers = () => {
-    onSnapshot(q, (querySnapshot) => {
+  // 新着順
+  // const getallUsers = () => {
+  //   onSnapshot(q, (querySnapshot) => {
+  //     setUsers(
+  //       querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+  //     );
+  //     console.log(users);
+  //   });
+  // };
+
+  // useEffect(() => {
+  //   getallUsers();
+  // }, []);
+
+  useEffect(() => {
+    const usersCollectionRef = collection(database, "users");
+    onSnapshot(usersCollectionRef, (querySnapshot) => {
       setUsers(
         querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
       );
-      console.log(users);
     });
-  };
 
-  useEffect(() => {
-    getallUsers();
+    const meetingCollectionRef = collection(database, "meeting");
+    onSnapshot(meetingCollectionRef, (querySnapshot) => {
+      setMeeting(
+        querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+      );
+    });
   }, []);
 
+  console.log(meeting);
+  console.log(users);
+  const getID = (id: any) => {
+    setID(id);
+    setIsUpdate(true);
+    console.log(ID);
+  };
   return (
     <>
       <Head>
@@ -69,54 +124,125 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="">
-        <h2>今日のmeeting</h2>
-
-        <ScrollArea>
-          <Table sx={{ minWidth: 800 }} verticalSpacing="sm">
-            <thead>
-              <tr>
-                <th style={{ width: 40 }}></th>
-                <th>名前</th>
-                <th>学籍番号</th>
-                <th>年次</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr key="1">
-                <td>
-                  <Checkbox transitionDuration={0} />
-                </td>
-                <td>
-                  <Group spacing="sm">
-                    {/* <Avatar size={26} src={item.avatar} radius={26} /> */}
-                    <Text size="sm" weight={500}>
-                      aa
-                    </Text>
-                  </Group>
-                </td>
-                <td>a</td>
-                <td>a</td>
-              </tr>
-            </tbody>
-          </Table>
-        </ScrollArea>
-
-        <div>
-          <h2>北星ピア・サポーター</h2>
-          <p>おはようございます。</p>
-          <form onSubmit={handleSubmit(addDate)}>
-            <p>
-              <label htmlFor="univernumber">学籍番号</label>
-              <input
-                type="number"
-                id="univernumber"
-                {...register("univernumber")}
-              />
-            </p>
-            <button type="submit">送信</button>
-          </form>
+      <div className="max-w-5xl m-auto">
+        <div className="m-3">
+          <Button variant="outline" color="cyan">
+            <Link href="meeting/new">会議を登録する</Link>
+          </Button>
         </div>
+        <div className="m-3">
+          <Button variant="outline" color="cyan">
+            <Link href="user/new">学生を登録する</Link>
+          </Button>
+        </div>
+        <div className="m-3">
+          <Button variant="outline" color="cyan">
+            <Link href="user">ユーザー別出席確認</Link>
+          </Button>
+        </div>
+        <h2 className="text-center">会議一覧</h2>
+
+        {meeting &&
+          meeting.map((meeting) => (
+            <div key={meeting.id}>
+              <h2>{meeting.title}</h2>
+              <h3>日付</h3>
+              <p>
+                出席{meeting.attandece?.length}人 欠席
+                {users.length - meeting.attandece?.length}人 出席率
+                {Math.floor((meeting.attandece?.length / users.length) * 100)}％
+              </p>
+              <Button
+                variant="outline"
+                color="cyan"
+                className=" my-2 m-4"
+                onClick={() => getID(meeting.id)}
+              >
+                出席登録する
+              </Button>
+            </div>
+          ))}
+
+        {isUpdate && (
+          <div>
+            <h2>北星ピア・サポーター</h2>
+            <p>おはようございます。</p>
+            <form onSubmit={handleSubmit(updatefields)}>
+              <p>
+                <label htmlFor="univernumber">学籍番号</label>
+                <input
+                  type="number"
+                  id="univernumber"
+                  {...register("univernumber")}
+                />
+              </p>
+              <Button type="submit" variant="outline" color="cyan">
+                送信
+              </Button>
+            </form>
+
+            <ScrollArea>
+              <Table sx={{ minWidth: 800 }} verticalSpacing="sm">
+                <thead>
+                  <tr>
+                    <th style={{ width: 40 }}>出欠</th>
+                    <th>名前</th>
+                    <th>学籍番号</th>
+                    <th>年次</th>
+                  </tr>
+                </thead>
+                {meeting &&
+                  meeting.map((meeting) => (
+                    <>
+                      {meeting.id === ID && (
+                        <tbody key={meeting.id}>
+                          {users &&
+                            users.map((user) => (
+                              <tr key={user.id}>
+                                {/* {meeting.id} */}
+                                {/* {meeting.attandece} */}
+                                {/* {user.univernumber} */}
+                                {meeting.attandece &&
+                                  meeting.attandece.map(
+                                    (attend: any, i: number) => (
+                                      <div key={i}>
+                                        {attend === user.univernumber ? (
+                                          <Checkbox
+                                            transitionDuration={0}
+                                            checked
+                                          />
+                                        ) : (
+                                          <></>
+                                        )}
+                                      </div>
+                                    )
+                                  )}
+                                {/* <td>
+                                  {meeting.attandece === user.univernumber ? (
+                                    <Checkbox transitionDuration={0} checked />
+                                  ) : (
+                                    <Checkbox transitionDuration={0} />
+                                  )}
+                                </td> */}
+                                <td>
+                                  <Group spacing="sm">
+                                    <Text size="sm" weight={500}>
+                                      {user.fullname}
+                                    </Text>
+                                  </Group>
+                                </td>
+                                <td>{user.grade}</td>
+                                <td>{user.univernumber}</td>
+                              </tr>
+                            ))}
+                        </tbody>
+                      )}
+                    </>
+                  ))}
+              </Table>
+            </ScrollArea>
+          </div>
+        )}
       </div>
     </>
   );
