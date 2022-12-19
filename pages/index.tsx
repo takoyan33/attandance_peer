@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Paper, ThemeIcon } from "@mantine/core";
 import { database } from "../firebaseConfig";
+import moment from "moment";
 import {
   collection,
   addDoc,
@@ -98,6 +99,7 @@ export default function Home() {
   function closeModal() {
     setIsOpen(false);
   }
+
   type FormData = {
     univernumber: number;
   };
@@ -111,6 +113,8 @@ export default function Home() {
   const [title, setTitle] = useState("");
   const [users, setUsers] = useState<any[]>([]);
   const router = useRouter();
+  const target = moment().format("YYYY-MM-DD");
+  console.log(target);
 
   const updatefields = (data: FormData) => {
     //更新する
@@ -129,22 +133,23 @@ export default function Home() {
       });
   };
 
-    const deletefields = (data: FormData) => {
-      //更新する
-      let fieldToEdit = doc(database, "meeting", ID);
-      //セットしたIDをセットする
-      updateDoc(fieldToEdit, {
-        attandece: arrayRemove(data.univernumber),
+  const deletefields = (data: FormData) => {
+    //更新する
+    let fieldToEdit = doc(database, "meeting", ID);
+    //セットしたIDをセットする
+    updateDoc(fieldToEdit, {
+      attandece: arrayRemove(data.univernumber),
+    })
+      .then(() => {
+        setIsUpdate(false);
+        alert("出席を削除しました");
+        router.push("/");
       })
-        .then(() => {
-          setIsUpdate(false);
-          alert("出席を削除しました");
-          router.push("/");
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   useEffect(() => {
     const usersCollectionRef = collection(database, "users");
     onSnapshot(usersCollectionRef, (querySnapshot) => {
@@ -165,6 +170,11 @@ export default function Home() {
   console.log(meeting);
   console.log(users);
 
+  const dateja = new Date().toLocaleString("ja-JP");
+  const newdate = new Date().toLocaleString("ja-JP");
+  console.log(newdate);
+  console.log(dateja);
+
   const getID = (id: any, date: any, title: any) => {
     setTitle(title);
     setDate(date);
@@ -180,9 +190,22 @@ export default function Home() {
     console.log(ID);
   };
 
+  const getabesentPresent = (id: any) => {
+    setID(id);
+    setIsPresent(true);
+    console.log(ID);
+  };
+
   const closePresent = (id: any) => {
     setID(id);
     setIsPresent(false);
+    console.log(ID);
+  };
+
+  const closeabsentPresent = (id: any) => {
+    setID(id);
+    setIsOpen(false);
+    setIsUpdate(false);
     console.log(ID);
   };
 
@@ -431,6 +454,48 @@ export default function Home() {
           </div>
         </Modal>
 
+        {/* <Modal
+          contentLabel="Example Modal"
+          isOpen={modalIsOpen}
+          style={customStyles}
+          onAfterOpen={afterOpenModal}
+          onRequestClose={closeModal}
+        >
+          <div>
+            <p>
+              おはようございます。<br></br>
+              {title}の{date}日の欠席登録ができます。
+            </p>
+            <form onSubmit={handleSubmit(updatefields)}>
+              <p>
+                <label htmlFor="univernumber">学籍番号</label>
+                <Input
+                  type="number"
+                  id="univernumber"
+                  {...register("univernumber")}
+                />
+              </p>
+              <div className="text-center m-auto my-4">
+                <span className="m-2">
+                  <Button type="submit" variant="outline" color="cyan">
+                    欠席登録する
+                  </Button>
+                </span>
+                <span className="m-2">
+                  <Button
+                    type="submit"
+                    variant="outline"
+                    color="cyan"
+                    onClick={getabesentPresent}
+                  >
+                    取り消し
+                  </Button>
+                </span>
+              </div>
+            </form>
+          </div>
+        </Modal> */}
+
         {meeting &&
           meeting.map((meeting) => (
             <div key={meeting.id} className="my-4">
@@ -440,7 +505,15 @@ export default function Home() {
                 </Text>
                 <Text size="sm" mt="sm" color="dimmed">
                   日付：{meeting.date}
-                  開催前
+                  {target < meeting.date ? (
+                    <span className="m-2 bg-green-900 p-2 text-white">
+                      開催前
+                    </span>
+                  ) : (
+                    <span className="m-2 bg-blue-700 p-2 text-white">
+                      開催後
+                    </span>
+                  )}
                 </Text>
                 <Text size="sm" mt="sm" color="dimmed">
                   出席{meeting.attandece?.length}人 欠席

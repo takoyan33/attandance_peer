@@ -1,7 +1,6 @@
 import Head from "next/head";
 import Image from "next/image";
 import { Inter } from "@next/font/google";
-
 import { useState, useEffect } from "react";
 import { database } from "../../firebaseConfig";
 import { collection, addDoc, onSnapshot, getDocs } from "firebase/firestore";
@@ -24,9 +23,11 @@ export default function Home() {
   const q = query(usersRef, orderBy("timestamp", "desc"));
 
   const addDate = (data: any) => {
+    console.log(data.date);
     const newdate = new Date().toLocaleString("ja-JP");
     //日本時間を代入
     //写真のurlをセットする
+
     addDoc(databaseRef, {
       title: data.title,
       date: data.date.toLocaleString("ja-JP"),
