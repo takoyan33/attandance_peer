@@ -414,7 +414,7 @@ export default function Home() {
           </div>
         </Modal>
 
-        <Modal
+        {/* <Modal
           contentLabel="Example Modal"
           isOpen={modalabsentIsOpen}
           style={customStyles}
@@ -453,11 +453,79 @@ export default function Home() {
               </div>
             </form>
           </div>
+        </Modal> */}
+
+        <Modal
+          contentLabel="Example Modal"
+          isOpen={modalabsentIsOpen}
+          style={customStyles}
+          onRequestClose={closeabsentModal}
+        >
+          <div>
+            <p>
+              おはようございます。<br></br>
+              {title}の{date}日の欠席登録ができます。
+            </p>
+            <ScrollArea>
+              <Table sx={{ minWidth: 800 }} verticalSpacing="sm">
+                <thead>
+                  <tr>
+                    <th style={{ width: 40 }}>出欠</th>
+                    <th>名前</th>
+                    <th>学籍番号</th>
+                    <th>年次</th>
+                  </tr>
+                </thead>
+                {meeting &&
+                  meeting.map((meeting) => (
+                    <>
+                      {meeting.id === ID && (
+                        <tbody key={meeting.id}>
+                          {users &&
+                            users.map((user) => (
+                              <tr key={user.id}>
+                                <td>
+                                  {meeting.attandece &&
+                                    meeting.attandece.map(
+                                      (attend: any, i: number) => (
+                                        <div key={i}>
+                                          {attend === user.univernumber ? (
+                                            <div className="mt-2">
+                                              <Checkbox
+                                                transitionDuration={0}
+                                                checked
+                                              />
+                                            </div>
+                                          ) : (
+                                            <></>
+                                          )}
+                                        </div>
+                                      )
+                                    )}
+                                </td>
+                                <td>
+                                  <Group spacing="sm">
+                                    <Text size="sm" weight={500}>
+                                      {user.fullname}
+                                    </Text>
+                                  </Group>
+                                </td>
+                                <td>{user.univernumber}</td>
+                                <td>{user.grade}</td>
+                              </tr>
+                            ))}
+                        </tbody>
+                      )}
+                    </>
+                  ))}
+              </Table>
+            </ScrollArea>
+          </div>
         </Modal>
 
         {meeting &&
           meeting.map((meeting) => (
-            <div key={meeting.id} className="my-4">
+            <div key={meeting.id} className="my-4 w-80 m-auto">
               <Paper withBorder radius="md" className={classes.card}>
                 <Text size="xl" weight={500} mt="md">
                   {meeting.title}
@@ -498,16 +566,6 @@ export default function Home() {
                 >
                   出席票を見る
                 </Button>
-                {/* {IsPresent && (
-                  <Button
-                    type="submit"
-                    variant="outline"
-                    color="cyan"
-                    onClick={() => closePresent(meeting.id)}
-                  >
-                    出席票を閉じる
-                  </Button>
-                )} */}
                 <Button
                   variant="outline"
                   color="cyan"

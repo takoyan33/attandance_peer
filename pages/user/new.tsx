@@ -8,6 +8,7 @@ import { collection, addDoc, onSnapshot, getDocs } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { query, orderBy } from "firebase/firestore";
 import { useForm } from "react-hook-form";
+import { Button } from "@mantine/core";
 import { InputBase } from "@mantine/core";
 import { MuiNavbar } from "../../components/MuiNavbar";
 
@@ -65,7 +66,9 @@ export default function Home() {
       <MuiNavbar />
 
       <div className="max-w-5xl m-auto">
-        <h2>ユーザーを登録する</h2>
+        <h2 className="text-center text-2xl font-bold mb-6 mt-10">
+          ユーザーを登録する
+        </h2>
 
         <div>
           <form onSubmit={handleSubmit(addDate)}>
@@ -94,8 +97,11 @@ export default function Home() {
                 <option value="アドバイザー">アドバイザー</option>
               </InputBase>
             </div>
-
-            <button type="submit">送信</button>
+            <div className="my-4 text-center">
+              <Button type="submit" variant="outline" color="cyan">
+                登録する
+              </Button>
+            </div>
           </form>
         </div>
       </div>

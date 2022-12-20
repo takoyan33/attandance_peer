@@ -1,4 +1,9 @@
 import Head from "next/head";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from "firebase/auth";
 import Image from "next/image";
 import { Inter } from "@next/font/google";
 import { Input } from "@mantine/core";
@@ -13,46 +18,25 @@ import { MuiNavbar } from "../../components/MuiNavbar";
 
 export default function Home() {
   const { register, handleSubmit } = useForm();
-  const [title, setTitle] = useState("");
-  const [meeting, setMeeting] = useState<any[]>([]);
-  const [users, setUsers] = useState<any[]>([]);
-  const databaseRef = collection(database, "meeting");
   const router = useRouter();
-  const usersRef = collection(database, "users");
-  //新しい順
-  const q = query(usersRef, orderBy("timestamp", "desc"));
+  const auth = getAuth();
 
-  const addDate = (data: any) => {
-    const newdate = new Date().toLocaleString("ja-JP");
-    //日本時間を代入
-    //写真のurlをセットする
-    addDoc(usersRef, {
-      fullname: data.fullname,
-      univernumber: data.univernumber,
-      grade: data.grade,
-      createtime: newdate,
-      present: true,
-    })
-      .then(() => {
-        alert("ユーザー登録しました");
+  const SignIn = (data: any) => {
+    console.log(data.email);
+    alert("ログインしました");
+    console.log(data.password);
+    signInWithEmailAndPassword(auth, data.email, data.password)
+      .then((userCredential: any) => {
+        const user = userCredential.user;
+        localStorage.setItem("Token", user.accessToken);
         router.push("/");
       })
-      .catch((err: any) => {
-        console.error(err);
+      .catch((err) => {
+        alert("ログインできません");
+        console.log(err);
       });
   };
 
-  useEffect(() => {
-    const usersCollectionRef = collection(database, "users");
-    getDocs(usersCollectionRef).then((querySnapshot) => {
-      setUsers(querySnapshot.docs.map((doc) => doc.data()));
-    });
-
-    const meetingCollectionRef = collection(database, "meeting");
-    getDocs(meetingCollectionRef).then((querySnapshot) => {
-      setMeeting(querySnapshot.docs.map((doc) => doc.data()));
-    });
-  }, []);
   return (
     <>
       <Head>
@@ -63,25 +47,21 @@ export default function Home() {
       </Head>
       <MuiNavbar />
 
-      <div className="max-w-5xl m-auto mt-10">
+      <div className="max-w-4xl m-auto mt-10">
         <h2 className="text-center">管理者ログイン</h2>
 
         <div>
-          <form onSubmit={handleSubmit(addDate)}>
+          <form onSubmit={handleSubmit(SignIn)}>
             <div>
-              <label htmlFor="fullname">メールアドレス</label>
-              <Input type="text" id="fullname" {...register("fullname")} />
+              <label htmlFor="email">メールアドレス</label>
+              <Input type="email" id="email" {...register("email")} />
             </div>
 
-            <label htmlFor="univernumber">パスワード</label>
-            <Input
-              type="text"
-              id="univernumber"
-              {...register("univernumber")}
-            />
+            <label htmlFor="password">パスワード</label>
+            <Input type="password" id="password" {...register("password")} />
             <div className="my-4 m-auto text-center">
               <Button type="submit" variant="outline" color="cyan">
-                送信
+                ログインする
               </Button>
             </div>
           </form>

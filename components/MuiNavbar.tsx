@@ -117,10 +117,16 @@ export const MuiNavbar = () => {
         {user && (
           <>
             <MenuItem>
-              <Link href="/user/new">学生を編集する</Link>
+              <Link href="/user/new">学生を登録する</Link>
             </MenuItem>
             <MenuItem>
               <Link href="/meeting/new">会議を登録する</Link>
+            </MenuItem>
+            <MenuItem>
+              <Link href="/user/new">学生を編集する</Link>
+            </MenuItem>
+            <MenuItem>
+              <Link href="/meeting/new">会議を編集する</Link>
             </MenuItem>
             <MenuItem>
               <Link href="/user">ユーザー別出席確認</Link>

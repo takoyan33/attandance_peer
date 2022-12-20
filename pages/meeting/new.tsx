@@ -65,11 +65,13 @@ export default function Home() {
       </Head>
       <MuiNavbar />
       <div className="max-w-5xl m-auto">
-        <h2>会議を登録する</h2>
+        <h2 className="text-center text-2xl font-bold mb-6 mt-10">
+          会議を登録する
+        </h2>
 
-        <div>
-          <form onSubmit={handleSubmit(addDate)}>
-            <div>
+        <div className="max-w-5xl m-auto">
+          <form onSubmit={handleSubmit(addDate)} className="max-w-5xl m-auto">
+            <div className="max-w-5xl m-auto">
               <label htmlFor="title">タイトル</label>
               <Input type="text" id="title" {...register("title")} />
             </div>
@@ -83,7 +85,7 @@ export default function Home() {
             </div>
             <div className="my-4 text-center">
               <Button type="submit" variant="outline" color="cyan">
-                送信
+                登録する
               </Button>
             </div>
           </form>
