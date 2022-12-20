@@ -87,17 +87,14 @@ const customStyles = {
 export default function Home() {
   let subtitle: HTMLHeadingElement | null;
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
-
-  // function openModal() {
-  //   setIsOpen(true);
-  // }
-
-  function afterOpenModal() {
-    if (subtitle) subtitle.style.color = "#f00";
-  }
+  const [modalabsentIsOpen, setabsentIsOpen] = useState<boolean>(false);
 
   function closeModal() {
     setIsOpen(false);
+  }
+
+  function closeabsentModal() {
+    setabsentIsOpen(false);
   }
 
   type FormData = {
@@ -116,6 +113,7 @@ export default function Home() {
   const target = moment().format("YYYY-MM-DD");
   console.log(target);
 
+  //出席を登録する
   const updatefields = (data: FormData) => {
     //更新する
     let fieldToEdit = doc(database, "meeting", ID);
@@ -125,6 +123,8 @@ export default function Home() {
     })
       .then(() => {
         setIsUpdate(false);
+        setIsPresent(false);
+        setIsOpen(false);
         alert("出席登録しました");
         router.push("/");
       })
@@ -133,6 +133,7 @@ export default function Home() {
       });
   };
 
+  //出席を削除する
   const deletefields = (data: FormData) => {
     //更新する
     let fieldToEdit = doc(database, "meeting", ID);
@@ -142,6 +143,7 @@ export default function Home() {
     })
       .then(() => {
         setIsUpdate(false);
+        setabsentIsOpen(false);
         alert("出席を削除しました");
         router.push("/");
       })
@@ -150,6 +152,7 @@ export default function Home() {
       });
   };
 
+  //usersとmeetingを取得
   useEffect(() => {
     const usersCollectionRef = collection(database, "users");
     onSnapshot(usersCollectionRef, (querySnapshot) => {
@@ -167,14 +170,10 @@ export default function Home() {
     });
   }, []);
 
-  console.log(meeting);
-  console.log(users);
-
   const dateja = new Date().toLocaleString("ja-JP");
-  const newdate = new Date().toLocaleString("ja-JP");
-  console.log(newdate);
   console.log(dateja);
 
+  //出席登録のモーダル表示
   const getID = (id: any, date: any, title: any) => {
     setTitle(title);
     setDate(date);
@@ -184,31 +183,39 @@ export default function Home() {
     console.log(ID);
   };
 
-  const getPresent = (id: any) => {
+  //出席表のモーダル
+  const getPresent = (id: any, date: any, title: any) => {
+    setTitle(title);
+    setDate(date);
     setID(id);
     setIsPresent(true);
     console.log(ID);
   };
 
-  const getabesentPresent = (id: any) => {
+  //欠席登録のモーダル表示
+  const getabesentPresent = (id: any, date: any, title: any) => {
+    setTitle(title);
+    setDate(date);
+    setabsentIsOpen(true);
     setID(id);
-    setIsPresent(true);
     console.log(ID);
   };
 
+  //出席登録の取り消しモーダル
   const closePresent = (id: any) => {
     setID(id);
     setIsPresent(false);
     console.log(ID);
   };
 
+  //欠席登録の取り消しモーダル
   const closeabsentPresent = (id: any) => {
     setID(id);
-    setIsOpen(false);
-    setIsUpdate(false);
+    setabsentIsOpen(false);
     console.log(ID);
   };
 
+  //出席登録の取り消しモーダル
   const closeaddPresent = (id: any) => {
     setID(id);
     setIsOpen(false);
@@ -275,6 +282,17 @@ export default function Home() {
 
         {IsPresent && (
           <>
+            <h2 className="text-center">
+              {title}の{date}日の出席表
+            </h2>
+            <Button
+              type="submit"
+              variant="outline"
+              color="cyan"
+              onClick={() => closePresent(ID)}
+            >
+              出席票を閉じる
+            </Button>
             <ScrollArea>
               <Table sx={{ minWidth: 800 }} verticalSpacing="sm">
                 <thead>
@@ -355,68 +373,10 @@ export default function Home() {
             </div> */}
           </>
         )}
-
-        {/* {meeting &&
-          meeting.map((meeting) => (
-            <div key={meeting.id}>
-              <CardGradient
-                id={meeting.id}
-                title={meeting.title}
-                date={meeting.date}
-                present={meeting.attandece?.length}
-                absent={users.length - meeting.attandece?.length}
-                wariai={Math.floor(
-                  (meeting.attandece?.length / users.length) * 100
-                )}
-                onClick={}
-              /> */}
-        {/* <h2>{meeting.title}</h2>
-              <h3>日付：{meeting.date}</h3> */}
-        {/* 出席{meeting.attandece?.length}人 欠席
-                {users.length - meeting.attandece?.length}人 出席率 */}
-        {/* {Math.floor((meeting.attandece?.length / users.length) * 100)}％ */}
-        {/* <Button
-                variant="outline"
-                color="cyan"
-                className=" my-2 m-4"
-                onClick={() => getID(meeting.id, meeting.date, meeting.title)}
-              >
-                出席登録する
-              </Button>
-              <Button
-                variant="outline"
-                color="cyan"
-                className=" my-2 m-4"
-                onClick={() => getPresent(meeting.id)}
-              >
-                出席票を見る
-              </Button>
-              {IsPresent && (
-                <Button
-                  type="submit"
-                  variant="outline"
-                  color="cyan"
-                  onClick={() => closePresent(meeting.id)}
-                >
-                  出席票を閉じる
-                </Button>
-              )}
-              <Button
-                variant="outline"
-                color="cyan"
-                className=" my-2 m-4"
-                onClick={() => getID(meeting.id, meeting.date, meeting.title)}
-              >
-                出席を変更する
-              </Button>
-            </div>
-          ))} */}
-
         <Modal
           contentLabel="Example Modal"
           isOpen={modalIsOpen}
           style={customStyles}
-          onAfterOpen={afterOpenModal}
           onRequestClose={closeModal}
         >
           <div>
@@ -454,19 +414,18 @@ export default function Home() {
           </div>
         </Modal>
 
-        {/* <Modal
+        <Modal
           contentLabel="Example Modal"
-          isOpen={modalIsOpen}
+          isOpen={modalabsentIsOpen}
           style={customStyles}
-          onAfterOpen={afterOpenModal}
-          onRequestClose={closeModal}
+          onRequestClose={closeabsentModal}
         >
           <div>
             <p>
               おはようございます。<br></br>
               {title}の{date}日の欠席登録ができます。
             </p>
-            <form onSubmit={handleSubmit(updatefields)}>
+            <form onSubmit={handleSubmit(deletefields)}>
               <p>
                 <label htmlFor="univernumber">学籍番号</label>
                 <Input
@@ -486,7 +445,7 @@ export default function Home() {
                     type="submit"
                     variant="outline"
                     color="cyan"
-                    onClick={getabesentPresent}
+                    onClick={closeabsentPresent}
                   >
                     取り消し
                   </Button>
@@ -494,7 +453,7 @@ export default function Home() {
               </div>
             </form>
           </div>
-        </Modal> */}
+        </Modal>
 
         {meeting &&
           meeting.map((meeting) => (
@@ -533,11 +492,13 @@ export default function Home() {
                   variant="outline"
                   color="cyan"
                   className=" my-2 m-4"
-                  onClick={() => getPresent(meeting.id)}
+                  onClick={() =>
+                    getPresent(meeting.id, meeting.date, meeting.title)
+                  }
                 >
                   出席票を見る
                 </Button>
-                {IsPresent && (
+                {/* {IsPresent && (
                   <Button
                     type="submit"
                     variant="outline"
@@ -546,12 +507,14 @@ export default function Home() {
                   >
                     出席票を閉じる
                   </Button>
-                )}
+                )} */}
                 <Button
                   variant="outline"
                   color="cyan"
                   className=" my-2 m-4"
-                  onClick={() => getID(meeting.id, meeting.date, meeting.title)}
+                  onClick={() =>
+                    getabesentPresent(meeting.id, meeting.date, meeting.title)
+                  }
                 >
                   欠席に変更する
                 </Button>
@@ -561,4 +524,70 @@ export default function Home() {
       </div>
     </>
   );
+}
+
+{
+  /* {meeting &&
+          meeting.map((meeting) => (
+            <div key={meeting.id}>
+              <CardGradient
+                id={meeting.id}
+                title={meeting.title}
+                date={meeting.date}
+                present={meeting.attandece?.length}
+                absent={users.length - meeting.attandece?.length}
+                wariai={Math.floor(
+                  (meeting.attandece?.length / users.length) * 100
+                )}
+                onClick={}
+              /> */
+}
+{
+  /* <h2>{meeting.title}</h2>
+              <h3>日付：{meeting.date}</h3> */
+}
+{
+  /* 出席{meeting.attandece?.length}人 欠席
+                {users.length - meeting.attandece?.length}人 出席率 */
+}
+{
+  /* {Math.floor((meeting.attandece?.length / users.length) * 100)}％ */
+}
+{
+  /* <Button
+                variant="outline"
+                color="cyan"
+                className=" my-2 m-4"
+                onClick={() => getID(meeting.id, meeting.date, meeting.title)}
+              >
+                出席登録する
+              </Button>
+              <Button
+                variant="outline"
+                color="cyan"
+                className=" my-2 m-4"
+                onClick={() => getPresent(meeting.id)}
+              >
+                出席票を見る
+              </Button>
+              {IsPresent && (
+                <Button
+                  type="submit"
+                  variant="outline"
+                  color="cyan"
+                  onClick={() => closePresent(meeting.id)}
+                >
+                  出席票を閉じる
+                </Button>
+              )}
+              <Button
+                variant="outline"
+                color="cyan"
+                className=" my-2 m-4"
+                onClick={() => getID(meeting.id, meeting.date, meeting.title)}
+              >
+                出席を変更する
+              </Button>
+            </div>
+          ))} */
 }
