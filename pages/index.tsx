@@ -113,6 +113,7 @@ export default function Home() {
 
   type FormData = {
     univernumber: number;
+    attandece: number;
   };
   const { classes, cx } = useStyles();
   const { register, handleSubmit } = useForm<FormData>();
@@ -136,6 +137,21 @@ export default function Home() {
       attandece: arrayUnion(data.univernumber),
     })
       .then(() => {
+        // let fieldToEdit = doc(database, "users", ID);
+        // //セットしたIDをセットする
+        // updateDoc(fieldToEdit, {
+        //   attandece: data.attandece + 1,
+        // })
+        //   .then(() => {
+        //     setIsUpdate(false);
+        //     setIsPresent(false);
+        //     setIsOpen(false);
+        //     alert("出席登録しました");
+        //     router.push("/");
+        //   })
+        //   .catch((err) => {
+        //     console.log(err);
+        //   });
         setIsUpdate(false);
         setIsPresent(false);
         setIsOpen(false);

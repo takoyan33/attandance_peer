@@ -158,6 +158,9 @@ export default function Edit() {
             </Button>
             <h2 className="text-center text-2xl">{fullname}さんの出欠状況</h2>
 
+            <p>出席数</p>
+            <p>欠席数</p>
+
             <ScrollArea sx={{ height: 300 }}>
               <Table sx={{ minWidth: 400 }}>
                 <thead>
@@ -231,7 +234,7 @@ export default function Edit() {
                     </td>
                     <td>{user.univernumber}</td>
                     <td>{user.grade}</td>
-                    <td>10</td>
+                    <td>{meeting.length}</td>
                     <td>2</td>
                     <td>50%</td>
                     <td>

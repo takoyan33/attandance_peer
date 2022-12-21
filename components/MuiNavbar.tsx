@@ -129,7 +129,7 @@ export const MuiNavbar = () => {
               <Link href="/meeting/edit">会議を編集する</Link>
             </MenuItem>
             <MenuItem>
-              <Link href="/user">ユーザー別出席確認</Link>
+              <Link href="/user">学生別出席確認</Link>
             </MenuItem>
             <MenuItem>
               <button color="inherit" onClick={logout}>
