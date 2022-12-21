@@ -87,16 +87,6 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-interface CardGradientProps {
-  title: string;
-  date: string;
-  present: string;
-  absent: any;
-  wariai: any;
-  id: any;
-  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
-}
-
 const customStyles = {
   content: {
     top: "50%",
@@ -124,7 +114,7 @@ export default function Home() {
   type FormData = {
     univernumber: number;
   };
-  const { classes } = useStyles();
+  const { classes, cx } = useStyles();
   const { register, handleSubmit } = useForm<FormData>();
   const [IsPresent, setIsPresent] = useState(false);
   const [meeting, setMeeting] = useState<any[]>([]);
@@ -289,6 +279,7 @@ export default function Home() {
   //   );
   // };
   const [scrolled, setScrolled] = useState(false);
+
   return (
     <>
       <Head>
@@ -319,7 +310,11 @@ export default function Home() {
             </Button>
             <ScrollArea sx={{ height: 300 }}>
               <Table sx={{ minWidth: 400 }}>
-                <thead>
+                <thead
+                  className={cx(classes.header, {
+                    [classes.scrolled]: scrolled,
+                  })}
+                >
                   <tr>
                     <th style={{ width: 40 }}>出欠</th>
                     <th style={{ width: 50 }}>名前</th>
@@ -549,7 +544,7 @@ export default function Home() {
 
         {meeting &&
           meeting.map((meeting) => (
-            <div key={meeting.id} className="my-4 w-80 m-auto">
+            <div key={meeting.id} className="my-4 w-80 m-auto text-center">
               <Paper withBorder radius="md" className={classes.card}>
                 <Text size="xl" weight={500} mt="md">
                   {meeting.title}
@@ -572,34 +567,39 @@ export default function Home() {
                   {Math.floor((meeting.attandece?.length / users.length) * 100)}
                   ％
                 </Text>
-                <Button
-                  variant="outline"
-                  color="cyan"
-                  className=" my-2 m-4"
-                  onClick={() => getID(meeting.id, meeting.date, meeting.title)}
-                >
-                  出席登録する
-                </Button>
-                <Button
-                  variant="outline"
-                  color="cyan"
-                  className=" my-2 m-4"
-                  onClick={() =>
-                    getPresent(meeting.id, meeting.date, meeting.title)
-                  }
-                >
-                  出席票を見る
-                </Button>
-                <Button
-                  variant="outline"
-                  color="cyan"
-                  className=" my-2 m-4"
-                  onClick={() =>
-                    getabesentPresent(meeting.id, meeting.date, meeting.title)
-                  }
-                >
-                  欠席に変更する
-                </Button>
+                <div className="my-4 m-auto text-center">
+                  <Button
+                    variant="outline"
+                    color="cyan"
+                    onClick={() =>
+                      getID(meeting.id, meeting.date, meeting.title)
+                    }
+                  >
+                    出席登録する
+                  </Button>
+                </div>
+                <div className="my-4 m-auto text-center">
+                  <Button
+                    variant="outline"
+                    color="cyan"
+                    onClick={() =>
+                      getPresent(meeting.id, meeting.date, meeting.title)
+                    }
+                  >
+                    出席票を見る
+                  </Button>
+                </div>
+                <div className="my-4 m-auto text-center">
+                  <Button
+                    variant="outline"
+                    color="cyan"
+                    onClick={() =>
+                      getabesentPresent(meeting.id, meeting.date, meeting.title)
+                    }
+                  >
+                    欠席に変更する
+                  </Button>
+                </div>
               </Paper>
             </div>
           ))}

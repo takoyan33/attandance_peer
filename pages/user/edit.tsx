@@ -10,6 +10,16 @@ import { query, orderBy } from "firebase/firestore";
 import { useForm } from "react-hook-form";
 import { MuiNavbar } from "../../components/MuiNavbar";
 import { InputBase } from "@mantine/core";
+import {
+  createStyles,
+  Table,
+  Checkbox,
+  ScrollArea,
+  Group,
+  Avatar,
+  Text,
+} from "@mantine/core";
+import Modal from "react-modal";
 
 export default function Home() {
   const { register, handleSubmit } = useForm();
@@ -33,13 +43,32 @@ export default function Home() {
       createtime: newdate,
     })
       .then(() => {
-        alert("a");
+        alert("ユーザーを編集しました");
         router.push("/");
       })
       .catch((err: any) => {
         console.error(err);
       });
   };
+
+  //ユーザーを編集する
+  // const updatefields = (data: FormData) => {
+  //   //更新する
+  //   let fieldToEdit = doc(database, "meeting", ID);
+  //   //セットしたIDをセットする
+  //   updateDoc(fieldToEdit, {
+  //   })
+  //     .then(() => {
+  //       setIsUpdate(false);
+  //       setIsPresent(false);
+  //       setIsOpen(false);
+  //       alert("出席登録しました");
+  //       router.push("/");
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
 
   useEffect(() => {
     const usersCollectionRef = collection(database, "users");
@@ -62,9 +91,51 @@ export default function Home() {
       </Head>
       <MuiNavbar />
       <div className="max-w-5xl m-auto">
-        <h2>ユーザーを登録する</h2>
+        <h2 className="text-center text-2xl font-bold mb-6 mt-10">
+          ユーザーを編集する
+        </h2>
 
-        <div>
+        <ScrollArea sx={{ height: 500 }}>
+          <Table sx={{ minWidth: 1000 }}>
+            <thead>
+              <tr>
+                <th>名前</th>
+                <th>学籍番号</th>
+                <th>年次</th>
+                <th>性別</th>
+                <th>在籍状況</th>
+                <th>編集</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users &&
+                users.map((user) => (
+                  <tr key={user.id}>
+                    <td>
+                      <Group spacing="xs">
+                        <Text size="sm" weight={300}>
+                          {user.fullname}
+                        </Text>
+                      </Group>
+                    </td>
+                    <td>{user.univernumber}</td>
+                    <td>{user.grade}</td>
+                    <td>
+                      <button onClick={addDate}>編集する</button>
+                    </td>
+                    <td>
+                      <button onClick={addDate}>編集する</button>
+                    </td>
+                    <td>
+                      <button onClick={addDate}>編集する</button>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </Table>
+        </ScrollArea>
+
+        {/* <div>
           <form onSubmit={handleSubmit(addDate)}>
             <div>
               <label htmlFor="fullname">名前</label>
@@ -79,9 +150,6 @@ export default function Home() {
               />
             </div>
             <div>
-              {/* <label htmlFor="univeryear"></label>
-              <Input type="text" id="univeryear" {...register("univeryear")} /> */}
-
               <InputBase
                 label="学年"
                 component="select"
@@ -97,7 +165,7 @@ export default function Home() {
             </div>
             <button type="submit">送信</button>
           </form>
-        </div>
+        </div> */}
       </div>
     </>
   );
