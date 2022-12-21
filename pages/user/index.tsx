@@ -96,7 +96,7 @@ export default function Home() {
       <MuiNavbar />
       <div className="max-w-5xl m-auto">
         <h2 className="text-center text-2xl font-bold mb-6 mt-10">
-          ユーザーを編集する
+          ユーザー別出席状況
         </h2>
 
         {isUpdate && (

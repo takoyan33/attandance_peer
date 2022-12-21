@@ -2,6 +2,7 @@ import Head from "next/head";
 import "tailwindcss/tailwind.css";
 import { Inter } from "@next/font/google";
 import { Input } from "@mantine/core";
+import { Button } from "@mantine/core";
 import { useState, useEffect } from "react";
 import { database } from "../../firebaseConfig";
 import { collection, addDoc, onSnapshot, getDocs } from "firebase/firestore";
@@ -9,6 +10,7 @@ import { useRouter } from "next/router";
 import { query, orderBy } from "firebase/firestore";
 import { useForm } from "react-hook-form";
 import { MuiNavbar } from "../../components/MuiNavbar";
+import { doc, updateDoc } from "firebase/firestore";
 import { InputBase } from "@mantine/core";
 import {
   createStyles,
@@ -26,42 +28,63 @@ export default function Home() {
   const [title, setTitle] = useState("");
   const [meeting, setMeeting] = useState<any[]>([]);
   const [users, setUsers] = useState<any[]>([]);
-  const databaseRef = collection(database, "meeting");
   const router = useRouter();
-  const usersRef = collection(database, "users");
-  //新しい順
-  const q = query(usersRef, orderBy("timestamp", "desc"));
+  const [ID, setID] = useState<any>(null);
+  const [isUpdate, setIsUpdate] = useState(false);
+  const [fullname, setFullname] = useState("");
+  const [univernumber, setUnivernumber] = useState("");
+  const [grade, setGrade] = useState("");
 
-  const addDate = (data: any) => {
-    const newdate = new Date().toLocaleString("ja-JP");
-    //日本時間を代入
-    //写真のurlをセットする
-    addDoc(usersRef, {
+  //ユーザーを編集する
+  const updatefields = (data: any) => {
+    //更新する
+    let fieldToEdit = doc(database, "users", ID);
+    //セットしたIDをセットする
+    updateDoc(fieldToEdit, {
       fullname: data.fullname,
       univernumber: data.univernumber,
-      univeryear: data.univeryear,
-      createtime: newdate,
+      grade: data.grade,
     })
       .then(() => {
-        alert("a");
-        router.push("/");
+        setIsUpdate(false);
+        setID(null);
+        setFullname("");
+        setUnivernumber("");
+        setGrade("");
+        alert("ユーザー編集しました");
       })
-      .catch((err: any) => {
-        console.error(err);
+      .catch((err) => {
+        console.log(err);
       });
   };
 
+  //usersとmeetingを取得
   useEffect(() => {
     const usersCollectionRef = collection(database, "users");
-    getDocs(usersCollectionRef).then((querySnapshot) => {
-      setUsers(querySnapshot.docs.map((doc) => doc.data()));
-    });
-
-    const meetingCollectionRef = collection(database, "meeting");
-    getDocs(meetingCollectionRef).then((querySnapshot) => {
-      setMeeting(querySnapshot.docs.map((doc) => doc.data()));
+    onSnapshot(usersCollectionRef, (querySnapshot) => {
+      setUsers(
+        querySnapshot.docs.map((doc) => ({ ...doc.data(), "": doc.id }))
+      );
     });
   }, []);
+
+  //ユーザー編集
+  const getuserID = (id: any, fullname: any, univernumber: any, grade: any) => {
+    setID(id);
+    setFullname(fullname);
+    setUnivernumber(univernumber);
+    setGrade(grade);
+    setIsUpdate(true);
+    console.log(ID);
+    console.log(fullname);
+    console.log(univernumber);
+  };
+
+  //出席登録の取り消しモーダル
+  const closeaddPresent = (id: any) => {
+    setID(id);
+    setIsUpdate(false);
+  };
   return (
     <>
       <Head>
@@ -72,69 +95,129 @@ export default function Home() {
       </Head>
       <MuiNavbar />
       <div className="max-w-5xl m-auto">
-        <h2>ユーザーを編集する</h2>
+        <h2 className="text-center text-2xl font-bold mb-6 mt-10">
+          会議を編集する
+        </h2>
 
-        <ScrollArea sx={{ height: 300 }}>
-          <Table sx={{ minWidth: 400 }}>
+        {isUpdate && (
+          <div>
+            <Button
+              type="submit"
+              variant="outline"
+              color="cyan"
+              onClick={closeaddPresent}
+            >
+              編集を取り消す
+            </Button>
+            <h2 className="text-center text-2xl">{fullname}さんを編集画面</h2>
+            <form onSubmit={handleSubmit(updatefields)}>
+              <div>
+                <label htmlFor="fullname">名前</label>
+                <Input type="text" id="fullname" {...register("fullname")} />
+              </div>
+              <div>
+                <label htmlFor="univernumber">学籍番号</label>
+                <Input
+                  type="number"
+                  id="univernumber"
+                  {...register("univernumber")}
+                />
+              </div>
+              <div>
+                <InputBase
+                  label="学年"
+                  component="select"
+                  mt="md"
+                  id="univeryear"
+                  {...register("univeryear")}
+                >
+                  <option value="インターン">インターン</option>
+                  <option value="1年目">1年目</option>
+                  <option value="2年目">2年目</option>
+                  <option value="アドバイザー">アドバイザー</option>
+                </InputBase>
+              </div>
+              <div>
+                <InputBase
+                  label="性別"
+                  component="select"
+                  mt="md"
+                  id="belong"
+                  {...register("belong")}
+                >
+                  <option value="男性">男性</option>
+                  <option value="女性">女性</option>
+                  <option value="非公開">非公開</option>
+                </InputBase>
+              </div>
+              <div>
+                <InputBase
+                  label="現在の在籍状況"
+                  component="select"
+                  mt="md"
+                  id="belong"
+                  {...register("belong")}
+                >
+                  <option value="在籍中">在籍中</option>
+                  <option value="未在籍">未在籍</option>
+                </InputBase>
+              </div>
+              <div className="my-4 text-center">
+                <Button type="submit" variant="outline" color="cyan">
+                  送信
+                </Button>
+              </div>
+            </form>
+          </div>
+        )}
+
+        <ScrollArea sx={{ height: 500 }}>
+          <Table sx={{ minWidth: 1000 }}>
             <thead>
               <tr>
                 <th>名前</th>
                 <th>学籍番号</th>
                 <th>年次</th>
+                <th>性別</th>
+                <th>在籍状況</th>
+                <th>編集</th>
               </tr>
             </thead>
             <tbody>
               {users &&
                 users.map((user) => (
-                  <div key={user.id}>
-                    <tr>
-                      <td>
-                        <Group spacing="xs">
-                          <Text size="sm" weight={300}>
-                            {user.fullname}
-                          </Text>
-                        </Group>
-                      </td>
-                      <td>{user.univernumber}</td>
-                      <td>{user.grade}</td>
-                    </tr>
-                  </div>
+                  <tr key={user.id}>
+                    <td>
+                      <Group spacing="xs">
+                        <Text size="sm" weight={300}>
+                          {user.fullname}
+                        </Text>
+                      </Group>
+                    </td>
+                    <td>{user.univernumber}</td>
+                    <td>{user.grade}</td>
+                    <td>男</td>
+                    <td>在籍中</td>
+                    <td>
+                      <button
+                        onClick={() =>
+                          getuserID(
+                            user.id,
+                            user.fullname,
+                            user.univernumber,
+                            user.grade
+                          )
+                        }
+                        className="border"
+                      >
+                        編集する
+                      </button>
+                    </td>
+                  </tr>
                 ))}
             </tbody>
           </Table>
         </ScrollArea>
-
-        <div>
-          <form onSubmit={handleSubmit(addDate)}>
-            <div>
-              <label htmlFor="fullname">名前</label>
-              <Input type="text" id="fullname" {...register("fullname")} />
-            </div>
-            <div>
-              <label htmlFor="univernumber">学籍番号</label>
-              <Input
-                type="number"
-                id="univernumber"
-                {...register("univernumber")}
-              />
-            </div>
-            <div>
-              <InputBase
-                label="学年"
-                component="select"
-                mt="md"
-                id="univeryear"
-                {...register("univeryear")}
-              >
-                <option value="インターン">インターン</option>
-                <option value="1年目">1年目</option>
-                <option value="2年目">2年目</option>
-                <option value="アドバイザー">アドバイザー</option>
-              </InputBase>
-            </div>
-            <button type="submit">送信</button>
-          </form>
-        </div>
       </div>
     </>
   );

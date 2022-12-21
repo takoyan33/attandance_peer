@@ -14,10 +14,6 @@ import { MuiNavbar } from "../../components/MuiNavbar";
 
 export default function Home() {
   const { register, handleSubmit } = useForm();
-  const [title, setTitle] = useState("");
-  const [meeting, setMeeting] = useState<any[]>([]);
-  const [users, setUsers] = useState<any[]>([]);
-  const databaseRef = collection(database, "meeting");
   const router = useRouter();
   const usersRef = collection(database, "users");
   //新しい順
@@ -43,17 +39,6 @@ export default function Home() {
       });
   };
 
-  useEffect(() => {
-    const usersCollectionRef = collection(database, "users");
-    getDocs(usersCollectionRef).then((querySnapshot) => {
-      setUsers(querySnapshot.docs.map((doc) => doc.data()));
-    });
-
-    const meetingCollectionRef = collection(database, "meeting");
-    getDocs(meetingCollectionRef).then((querySnapshot) => {
-      setMeeting(querySnapshot.docs.map((doc) => doc.data()));
-    });
-  }, []);
   return (
     <>
       <Head>
