@@ -61,6 +61,30 @@ const useStyles = createStyles((theme) => ({
       ),
     },
   },
+  header: {
+    position: "sticky",
+    top: 0,
+    backgroundColor:
+      theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white,
+    transition: "box-shadow 150ms ease",
+
+    "&::after": {
+      content: '""',
+      position: "absolute",
+      left: 0,
+      right: 0,
+      bottom: 0,
+      borderBottom: `1px solid ${
+        theme.colorScheme === "dark"
+          ? theme.colors.dark[3]
+          : theme.colors.gray[2]
+      }`,
+    },
+  },
+
+  scrolled: {
+    boxShadow: theme.shadows.sm,
+  },
 }));
 
 interface CardGradientProps {
@@ -264,7 +288,7 @@ export default function Home() {
   //     </text>
   //   );
   // };
-
+  const [scrolled, setScrolled] = useState(false);
   return (
     <>
       <Head>
@@ -293,14 +317,14 @@ export default function Home() {
             >
               出席票を閉じる
             </Button>
-            <ScrollArea>
-              <Table sx={{ minWidth: 800 }} verticalSpacing="sm">
+            <ScrollArea sx={{ height: 300 }}>
+              <Table sx={{ minWidth: 400 }}>
                 <thead>
                   <tr>
                     <th style={{ width: 40 }}>出欠</th>
-                    <th>名前</th>
-                    <th>学籍番号</th>
-                    <th>年次</th>
+                    <th style={{ width: 50 }}>名前</th>
+                    <th style={{ width: 80 }}>学籍番号</th>
+                    <th style={{ width: 70 }}>年次</th>
                   </tr>
                 </thead>
                 {meeting &&
@@ -466,11 +490,11 @@ export default function Home() {
               おはようございます。<br></br>
               {title}の{date}日の欠席登録ができます。
             </p>
-            <ScrollArea>
-              <Table sx={{ minWidth: 800 }} verticalSpacing="sm">
+            <ScrollArea sx={{ height: 300 }}>
+              <Table sx={{ minWidth: 400 }}>
                 <thead>
                   <tr>
-                    <th style={{ width: 40 }}>出欠</th>
+                    <th>出欠</th>
                     <th>名前</th>
                     <th>学籍番号</th>
                     <th>年次</th>
@@ -504,8 +528,8 @@ export default function Home() {
                                     )}
                                 </td>
                                 <td>
-                                  <Group spacing="sm">
-                                    <Text size="sm" weight={500}>
+                                  <Group spacing="xs">
+                                    <Text size="sm" weight={300}>
                                       {user.fullname}
                                     </Text>
                                   </Group>
