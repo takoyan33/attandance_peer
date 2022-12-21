@@ -20,10 +20,66 @@ import {
   Group,
   Avatar,
   Text,
+  TextInput,
 } from "@mantine/core";
+import { keys } from "@mantine/utils";
 import Modal from "react-modal";
+import { TableSort } from "./TableSort";
 
-export default function Home() {
+const useStyles = createStyles((theme) => ({
+  card: {
+    position: "relative",
+    cursor: "pointer",
+    overflow: "hidden",
+    transition: "transform 150ms ease, box-shadow 100ms ease",
+    padding: theme.spacing.xl,
+    paddingLeft: theme.spacing.xl * 2,
+
+    "&:hover": {
+      boxShadow: theme.shadows.md,
+    },
+
+    "&::before": {
+      content: '""',
+      position: "absolute",
+      top: 0,
+      bottom: 0,
+      left: 0,
+      width: 6,
+      backgroundImage: theme.fn.linearGradient(
+        0,
+        theme.colors.pink[6],
+        theme.colors.orange[6]
+      ),
+    },
+  },
+  header: {
+    position: "sticky",
+    top: 0,
+    backgroundColor:
+      theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white,
+    transition: "box-shadow 150ms ease",
+
+    "&::after": {
+      content: '""',
+      position: "absolute",
+      left: 0,
+      right: 0,
+      bottom: 0,
+      borderBottom: `1px solid ${
+        theme.colorScheme === "dark"
+          ? theme.colors.dark[3]
+          : theme.colors.gray[2]
+      }`,
+    },
+  },
+
+  scrolled: {
+    boxShadow: theme.shadows.sm,
+  },
+}));
+
+export default function Edit() {
   const { register, handleSubmit } = useForm();
   const [title, setTitle] = useState("");
   const [meeting, setMeeting] = useState<any[]>([]);
@@ -58,12 +114,12 @@ export default function Home() {
       });
   };
 
-  //usersとmeetingを取得
+  //usersを取得
   useEffect(() => {
     const usersCollectionRef = collection(database, "users");
     onSnapshot(usersCollectionRef, (querySnapshot) => {
       setUsers(
-        querySnapshot.docs.map((doc) => ({ ...doc.data(), "": doc.id }))
+        querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
       );
     });
   }, []);
@@ -85,6 +141,11 @@ export default function Home() {
     setID(id);
     setIsUpdate(false);
   };
+
+  console.log(users);
+  const { classes, cx } = useStyles();
+  const [scrolled, setScrolled] = useState(false);
+
   return (
     <>
       <Head>
@@ -98,6 +159,8 @@ export default function Home() {
         <h2 className="text-center text-2xl font-bold mb-6 mt-10">
           ユーザーを編集する
         </h2>
+        {/* 
+        <TableSort data={users} /> */}
 
         {isUpdate && (
           <div>
@@ -173,7 +236,11 @@ export default function Home() {
 
         <ScrollArea sx={{ height: 500 }}>
           <Table sx={{ minWidth: 1000 }}>
-            <thead>
+            <thead
+              className={cx(classes.header, {
+                [classes.scrolled]: scrolled,
+              })}
+            >
               <tr>
                 <th>名前</th>
                 <th>学籍番号</th>

@@ -20,10 +20,66 @@ import {
   Group,
   Avatar,
   Text,
+  TextInput,
 } from "@mantine/core";
+import { keys } from "@mantine/utils";
 import Modal from "react-modal";
+import { TableSort } from "./TableSort";
 
-export default function Home() {
+const useStyles = createStyles((theme) => ({
+  card: {
+    position: "relative",
+    cursor: "pointer",
+    overflow: "hidden",
+    transition: "transform 150ms ease, box-shadow 100ms ease",
+    padding: theme.spacing.xl,
+    paddingLeft: theme.spacing.xl * 2,
+
+    "&:hover": {
+      boxShadow: theme.shadows.md,
+    },
+
+    "&::before": {
+      content: '""',
+      position: "absolute",
+      top: 0,
+      bottom: 0,
+      left: 0,
+      width: 6,
+      backgroundImage: theme.fn.linearGradient(
+        0,
+        theme.colors.pink[6],
+        theme.colors.orange[6]
+      ),
+    },
+  },
+  header: {
+    position: "sticky",
+    top: 0,
+    backgroundColor:
+      theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white,
+    transition: "box-shadow 150ms ease",
+
+    "&::after": {
+      content: '""',
+      position: "absolute",
+      left: 0,
+      right: 0,
+      bottom: 0,
+      borderBottom: `1px solid ${
+        theme.colorScheme === "dark"
+          ? theme.colors.dark[3]
+          : theme.colors.gray[2]
+      }`,
+    },
+  },
+
+  scrolled: {
+    boxShadow: theme.shadows.sm,
+  },
+}));
+
+export default function Edit() {
   const { register, handleSubmit } = useForm();
   const [title, setTitle] = useState("");
   const [meeting, setMeeting] = useState<any[]>([]);
@@ -35,39 +91,24 @@ export default function Home() {
   const [univernumber, setUnivernumber] = useState("");
   const [grade, setGrade] = useState("");
 
-  //ユーザーを編集する
-  const updatefields = (data: any) => {
-    //更新する
-    let fieldToEdit = doc(database, "users", ID);
-    //セットしたIDをセットする
-    updateDoc(fieldToEdit, {
-      fullname: data.fullname,
-      univernumber: data.univernumber,
-      grade: data.grade,
-    })
-      .then(() => {
-        setIsUpdate(false);
-        setID(null);
-        setFullname("");
-        setUnivernumber("");
-        setGrade("");
-        alert("ユーザー編集しました");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
   //usersとmeetingを取得
   useEffect(() => {
     const usersCollectionRef = collection(database, "users");
     onSnapshot(usersCollectionRef, (querySnapshot) => {
       setUsers(
-        querySnapshot.docs.map((doc) => ({ ...doc.data(), "": doc.id }))
+        querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+      );
+    });
+
+    const meetingCollectionRef = collection(database, "meeting");
+    const m = query(meetingCollectionRef, orderBy("date", "desc"));
+    onSnapshot(m, (querySnapshot) => {
+      setMeeting(
+        querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
       );
     });
   }, []);
-
+  //ユーザーIDを取得
   //ユーザー編集
   const getuserID = (id: any, fullname: any, univernumber: any, grade: any) => {
     setID(id);
@@ -81,10 +122,14 @@ export default function Home() {
   };
 
   //出席登録の取り消しモーダル
-  const closeaddPresent = (id: any) => {
-    setID(id);
+  const closeaddPresent = () => {
+    setID(null);
     setIsUpdate(false);
   };
+
+  const { classes, cx } = useStyles();
+  const [scrolled, setScrolled] = useState(false);
+
   return (
     <>
       <Head>
@@ -96,8 +141,10 @@ export default function Home() {
       <MuiNavbar />
       <div className="max-w-5xl m-auto">
         <h2 className="text-center text-2xl font-bold mb-6 mt-10">
-          ユーザー別出席状況
+          ユーザーの出席状況を確認する
         </h2>
+        {/* 
+        <TableSort data={users} /> */}
 
         {isUpdate && (
           <div>
@@ -109,78 +156,66 @@ export default function Home() {
             >
               編集を取り消す
             </Button>
-            <h2 className="text-center text-2xl">{fullname}さんを編集画面</h2>
-            <form onSubmit={handleSubmit(updatefields)}>
-              <div>
-                <label htmlFor="fullname">名前</label>
-                <Input type="text" id="fullname" {...register("fullname")} />
-              </div>
-              <div>
-                <label htmlFor="univernumber">学籍番号</label>
-                <Input
-                  type="number"
-                  id="univernumber"
-                  {...register("univernumber")}
-                />
-              </div>
-              <div>
-                <InputBase
-                  label="学年"
-                  component="select"
-                  mt="md"
-                  id="univeryear"
-                  {...register("univeryear")}
-                >
-                  <option value="インターン">インターン</option>
-                  <option value="1年目">1年目</option>
-                  <option value="2年目">2年目</option>
-                  <option value="アドバイザー">アドバイザー</option>
-                </InputBase>
-              </div>
-              <div>
-                <InputBase
-                  label="性別"
-                  component="select"
-                  mt="md"
-                  id="belong"
-                  {...register("belong")}
-                >
-                  <option value="男性">男性</option>
-                  <option value="女性">女性</option>
-                  <option value="非公開">非公開</option>
-                </InputBase>
-              </div>
-              <div>
-                <InputBase
-                  label="現在の在籍状況"
-                  component="select"
-                  mt="md"
-                  id="belong"
-                  {...register("belong")}
-                >
-                  <option value="在籍中">在籍中</option>
-                  <option value="未在籍">未在籍</option>
-                </InputBase>
-              </div>
-              <div className="my-4 text-center">
-                <Button type="submit" variant="outline" color="cyan">
-                  送信
-                </Button>
-              </div>
-            </form>
+            <h2 className="text-center text-2xl">{fullname}さんの出欠状況</h2>
+
+            <ScrollArea sx={{ height: 300 }}>
+              <Table sx={{ minWidth: 400 }}>
+                <thead>
+                  <tr>
+                    <th>会議日</th>
+                    <th>会議名</th>
+                    <th>出欠状況</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {meeting &&
+                    meeting.map((meeting) => (
+                      <tr key={meeting.id}>
+                        <td>{meeting.date}</td>
+                        <td>
+                          <Group spacing="xs">
+                            <Text size="sm" weight={300}>
+                              {meeting.title}
+                            </Text>
+                          </Group>
+                        </td>
+                        <td>
+                          {meeting.attandece &&
+                            meeting.attandece.map((attend: any, i: number) => (
+                              <div key={i}>
+                                {attend === univernumber ? (
+                                  <div className="mt-2">
+                                    <Checkbox transitionDuration={0} checked />
+                                  </div>
+                                ) : (
+                                  <></>
+                                )}
+                              </div>
+                            ))}
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </Table>
+            </ScrollArea>
           </div>
         )}
 
         <ScrollArea sx={{ height: 500 }}>
           <Table sx={{ minWidth: 1000 }}>
-            <thead>
+            <thead
+              className={cx(classes.header, {
+                [classes.scrolled]: scrolled,
+              })}
+            >
               <tr>
                 <th>名前</th>
                 <th>学籍番号</th>
                 <th>年次</th>
-                <th>性別</th>
-                <th>在籍状況</th>
-                <th>編集</th>
+                <th>出席数</th>
+                <th>欠席数</th>
+                <th>出席率</th>
+                <th>詳しく見る</th>
               </tr>
             </thead>
             <tbody>
@@ -196,8 +231,9 @@ export default function Home() {
                     </td>
                     <td>{user.univernumber}</td>
                     <td>{user.grade}</td>
-                    <td>男</td>
-                    <td>在籍中</td>
+                    <td>10</td>
+                    <td>2</td>
+                    <td>50%</td>
                     <td>
                       <button
                         onClick={() =>
@@ -208,9 +244,8 @@ export default function Home() {
                             user.grade
                           )
                         }
-                        className="border"
                       >
-                        編集する
+                        確認する
                       </button>
                     </td>
                   </tr>

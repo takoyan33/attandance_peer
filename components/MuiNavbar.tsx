@@ -132,10 +132,10 @@ export const MuiNavbar = () => {
               <Link href="/user">ユーザー別出席確認</Link>
             </MenuItem>
             <MenuItem>
-              <Button color="inherit" onClick={logout}>
+              <button color="inherit" onClick={logout}>
                 <Logout fontSize="small" />
                 ログアウト
-              </Button>
+              </button>
             </MenuItem>
           </>
         )}

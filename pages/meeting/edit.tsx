@@ -96,7 +96,7 @@ export default function Home() {
       <MuiNavbar />
       <div className="max-w-5xl m-auto">
         <h2 className="text-center text-2xl font-bold mb-6 mt-10">
-          会議を編集する
+          を編集する
         </h2>
 
         {isUpdate && (
