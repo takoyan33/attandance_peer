@@ -22,9 +22,7 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
-import { keys } from "@mantine/utils";
 import Modal from "react-modal";
-import { TableSort } from "./TableSort";
 
 const useStyles = createStyles((theme) => ({
   card: {
