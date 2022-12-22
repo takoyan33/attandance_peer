@@ -33,6 +33,8 @@ import {
 } from "@mantine/core";
 import { MuiNavbar } from "../components/MuiNavbar";
 import Modal from "react-modal";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -100,6 +102,18 @@ const customStyles = {
 };
 
 export default function Home() {
+  const notify = () =>
+    toast.success("出席登録ができました", {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+
   let subtitle: HTMLHeadingElement | null;
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
   const [modalabsentIsOpen, setabsentIsOpen] = useState<boolean>(false);
@@ -153,16 +167,11 @@ export default function Home() {
             setIsUpdate(false);
             setIsPresent(false);
             setIsOpen(false);
-            router.push("/");
+            notify();
           })
           .catch((err) => {
             console.log(err);
           });
-        setIsUpdate(false);
-        setIsPresent(false);
-        setIsOpen(false);
-        alert("出席登録しました");
-        router.push("/");
       })
       .catch((err) => {
         console.log(err);
@@ -313,6 +322,7 @@ export default function Home() {
       </Head>
       <MuiNavbar />
       <div className="max-w-5xl m-auto" id="APP">
+        <ToastContainer />
         <h2 className="text-center text-2xl font-bold mb-6 mt-10">
           ピアサポータル出席管理
         </h2>

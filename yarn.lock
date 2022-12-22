@@ -773,6 +773,14 @@
   resolved "https://registry.yarnpkg.com/@mantine/hooks/-/hooks-5.9.4.tgz#20b8206a6418fc21260ce307e43a2c8dc06cb8e8"
   integrity sha512-W6RR6fLKh0gPnIA+HLnJ3NRbgnlhbjsajug+Fhhs+CE6z1528ROI63OZ9s5NIAUj/aATkEyJA64P/V/yXYZ69A==
 
+"@mantine/notifications@^5.9.5":
+  version "5.9.5"
+  resolved "https://registry.yarnpkg.com/@mantine/notifications/-/notifications-5.9.5.tgz#508e7f4e7de1603e17d0aa03e6abaa1b7ff456e3"
+  integrity sha512-RGr48xPVMjlt0l6LEG7sncgTf4oKHxBDtLYOBwybNuLs1pcpmoHGdcgCkvINnXKWFHF8IQG/l3eDlKBseromJQ==
+  dependencies:
+    "@mantine/utils" "5.9.5"
+    react-transition-group "4.4.2"
+
 "@mantine/styles@5.9.4":
   version "5.9.4"
   resolved "https://registry.yarnpkg.com/@mantine/styles/-/styles-5.9.4.tgz#7f44c39d86a833b520a7430fea754a47d4b7a2d5"
@@ -785,6 +793,11 @@
   version "5.9.4"
   resolved "https://registry.yarnpkg.com/@mantine/utils/-/utils-5.9.4.tgz#3d3b7646eabaffe6cb4b02083317cc8f9565d03e"
   integrity sha512-NZAn30jjF52X+MFnkO3oaVgo2LPx3o/QxYlcuMkRBUTZALEXvQgrD0OyGDRgEXnfMdmkBP6rk3Pol6yXXEwU6w==
+
+"@mantine/utils@5.9.5":
+  version "5.9.5"
+  resolved "https://registry.yarnpkg.com/@mantine/utils/-/utils-5.9.5.tgz#9b56c899e479c90abecc096eb8543b93bdc52938"
+  integrity sha512-OtMOvXMyqpZ+Tz25DYRwRkvERvmF4L0RJiq+JnXk+1yKDvG+JZQuMMLnt0nZ81T6q7uzDSA29cJ45syHL2BXmQ==
 
 "@mui/base@5.0.0-alpha.110":
   version "5.0.0-alpha.110"
@@ -3341,6 +3354,16 @@ react-transition-group@2.9.0:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
     react-lifecycles-compat "^3.0.4"
+
+react-transition-group@4.4.2:
+  version "4.4.2"
+  resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-4.4.2.tgz#8b59a56f09ced7b55cbd53c36768b922890d5470"
+  integrity sha512-/RNYfRAMlZwDSr6z4zNKV6xu53/e2BuaBbGhbyYIXTrmgu/bGHzmqOs7mJSJBHy9Ud+ApHx3QjrkKSp1pxvlFg==
+  dependencies:
+    "@babel/runtime" "^7.5.5"
+    dom-helpers "^5.0.1"
+    loose-envify "^1.4.0"
+    prop-types "^15.6.2"
 
 react-transition-group@^4.4.5:
   version "4.4.5"
