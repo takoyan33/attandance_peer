@@ -73,7 +73,7 @@ export default function Home() {
         <div className="max-w-5xl m-auto">
           <form onSubmit={handleSubmit(addDate)} className="max-w-5xl m-auto">
             <div className="max-w-5xl m-auto">
-              <label htmlFor="title">タイトル</label>
+              <label htmlFor="title">会議名</label>
               <Input type="text" id="title" {...register("title")} />
             </div>
             <div>

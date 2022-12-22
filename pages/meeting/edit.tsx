@@ -31,58 +31,64 @@ export default function Home() {
   const router = useRouter();
   const [ID, setID] = useState<any>(null);
   const [isUpdate, setIsUpdate] = useState(false);
-  const [fullname, setFullname] = useState("");
-  const [univernumber, setUnivernumber] = useState("");
-  const [grade, setGrade] = useState("");
+  const [date, setDate] = useState("");
+  const [body, setBody] = useState("");
 
   //ユーザーを編集する
   const updatefields = (data: any) => {
     //更新する
-    let fieldToEdit = doc(database, "users", ID);
+    let meetingToEdit = doc(database, "meeting", ID);
     //セットしたIDをセットする
-    updateDoc(fieldToEdit, {
-      fullname: data.fullname,
-      univernumber: data.univernumber,
-      grade: data.grade,
+    updateDoc(meetingToEdit, {
+      title: data.title,
+      date: data.date,
+      body: data.body,
     })
       .then(() => {
         setIsUpdate(false);
         setID(null);
-        setFullname("");
-        setUnivernumber("");
-        setGrade("");
+        setDate("");
+        setBody("");
+        setTitle("");
         alert("ユーザー編集しました");
       })
       .catch((err) => {
         console.log(err);
       });
   };
-
   //usersとmeetingを取得
   useEffect(() => {
     const usersCollectionRef = collection(database, "users");
     onSnapshot(usersCollectionRef, (querySnapshot) => {
       setUsers(
-        querySnapshot.docs.map((doc) => ({ ...doc.data(), "": doc.id }))
+        querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+      );
+    });
+
+    const meetingCollectionRef = collection(database, "meeting");
+    const m = query(meetingCollectionRef, orderBy("date", "desc"));
+    onSnapshot(m, (querySnapshot) => {
+      setMeeting(
+        querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
       );
     });
   }, []);
 
   //ユーザー編集
-  const getuserID = (id: any, fullname: any, univernumber: any, grade: any) => {
+  const getuserID = (id: string, title: string, date: any, body: string) => {
     setID(id);
-    setFullname(fullname);
-    setUnivernumber(univernumber);
-    setGrade(grade);
+    setTitle(title);
+    setDate(date);
+    setBody(body);
     setIsUpdate(true);
-    console.log(ID);
-    console.log(fullname);
-    console.log(univernumber);
   };
 
   //出席登録の取り消しモーダル
   const closeaddPresent = (id: any) => {
-    setID(id);
+    setID(null);
+    setDate("");
+    setBody("");
+    setTitle("");
     setIsUpdate(false);
   };
   return (
@@ -96,8 +102,9 @@ export default function Home() {
       <MuiNavbar />
       <div className="max-w-5xl m-auto">
         <h2 className="text-center text-2xl font-bold mb-6 mt-10">
-          を編集する
+          会議を編集する
         </h2>
+        <p className="text-center">会議数　{meeting.length}件</p>
 
         {isUpdate && (
           <div>
@@ -109,62 +116,26 @@ export default function Home() {
             >
               編集を取り消す
             </Button>
-            <h2 className="text-center text-2xl">{fullname}さんを編集画面</h2>
+            <h2 className="text-center text-2xl">
+              {date}
+              {title}の編集画面
+            </h2>
             <form onSubmit={handleSubmit(updatefields)}>
-              <div>
-                <label htmlFor="fullname">名前</label>
-                <Input type="text" id="fullname" {...register("fullname")} />
+              <div className="max-w-5xl m-auto">
+                <label htmlFor="title">会議名</label>
+                <Input type="text" id="title" {...register("title")} />
               </div>
               <div>
-                <label htmlFor="univernumber">学籍番号</label>
-                <Input
-                  type="number"
-                  id="univernumber"
-                  {...register("univernumber")}
-                />
+                <label htmlFor="date">日付</label>
+                <Input type="date" id="date" {...register("date")} />
               </div>
               <div>
-                <InputBase
-                  label="学年"
-                  component="select"
-                  mt="md"
-                  id="univeryear"
-                  {...register("univeryear")}
-                >
-                  <option value="インターン">インターン</option>
-                  <option value="1年目">1年目</option>
-                  <option value="2年目">2年目</option>
-                  <option value="アドバイザー">アドバイザー</option>
-                </InputBase>
-              </div>
-              <div>
-                <InputBase
-                  label="性別"
-                  component="select"
-                  mt="md"
-                  id="belong"
-                  {...register("belong")}
-                >
-                  <option value="男性">男性</option>
-                  <option value="女性">女性</option>
-                  <option value="非公開">非公開</option>
-                </InputBase>
-              </div>
-              <div>
-                <InputBase
-                  label="現在の在籍状況"
-                  component="select"
-                  mt="md"
-                  id="belong"
-                  {...register("belong")}
-                >
-                  <option value="在籍中">在籍中</option>
-                  <option value="未在籍">未在籍</option>
-                </InputBase>
+                <label htmlFor="body">内容</label>
+                <Input type="text" id="body" {...register("body")} />
               </div>
               <div className="my-4 text-center">
                 <Button type="submit" variant="outline" color="cyan">
-                  送信
+                  編集する
                 </Button>
               </div>
             </form>
@@ -175,37 +146,44 @@ export default function Home() {
           <Table sx={{ minWidth: 1000 }}>
             <thead>
               <tr>
-                <th>名前</th>
-                <th>学籍番号</th>
-                <th>年次</th>
-                <th>性別</th>
-                <th>在籍状況</th>
+                <th>日付</th>
+                <th>会議</th>
+                <th>内容</th>
+                <th>出席数</th>
+                <th>欠席数</th>
+                <th>出席率</th>
                 <th>編集</th>
               </tr>
             </thead>
             <tbody>
-              {users &&
-                users.map((user) => (
-                  <tr key={user.id}>
+              {meeting &&
+                meeting.map((meeting) => (
+                  <tr key={meeting.id}>
+                    <td>{meeting.date}</td>
                     <td>
                       <Group spacing="xs">
                         <Text size="sm" weight={300}>
-                          {user.fullname}
+                          {meeting.title}
                         </Text>
                       </Group>
                     </td>
-                    <td>{user.univernumber}</td>
-                    <td>{user.grade}</td>
-                    <td>男</td>
-                    <td>在籍中</td>
+                    <td>{meeting.body}</td>
+                    <td>{meeting.attandece?.length}</td>
+                    <td>{users.length - meeting.attandece?.length}</td>
+                    <td>
+                      {Math.floor(
+                        (meeting.attandece?.length / users.length) * 100
+                      )}
+                      %
+                    </td>
                     <td>
                       <button
                         onClick={() =>
                           getuserID(
-                            user.id,
-                            user.fullname,
-                            user.univernumber,
-                            user.grade
+                            meeting.id,
+                            meeting.title,
+                            meeting.date,
+                            meeting.body
                           )
                         }
                         className="border"

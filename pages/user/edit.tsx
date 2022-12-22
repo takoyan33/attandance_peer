@@ -158,8 +158,7 @@ export default function Edit() {
         <h2 className="text-center text-2xl font-bold mb-6 mt-10">
           ユーザーを編集する
         </h2>
-        {/* 
-        <TableSort data={users} /> */}
+        <p className="text-center">学生数　{users.length}人</p>
 
         {isUpdate && (
           <div>
