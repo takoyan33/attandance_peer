@@ -28,7 +28,7 @@ export default function Home() {
       univernumber: data.univernumber,
       grade: data.grade,
       createtime: newdate,
-      present: true,
+      attend: 0,
     })
       .then(() => {
         alert("ユーザー登録しました");

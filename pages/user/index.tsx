@@ -186,15 +186,18 @@ export default function Edit() {
                           {meeting.attandece &&
                             meeting.attandece.map((attend: any, i: number) => (
                               <div key={i}>
-                                {attend === univernumber ? (
+                                {attend === univernumber && (
                                   <div className="mt-2">
                                     <Checkbox transitionDuration={0} checked />
                                   </div>
-                                ) : (
-                                  <></>
                                 )}
                               </div>
                             ))}
+                          {meeting.attandece === univernumber ? (
+                            <p></p>
+                          ) : (
+                            <p></p>
+                          )}
                         </td>
                       </tr>
                     ))}

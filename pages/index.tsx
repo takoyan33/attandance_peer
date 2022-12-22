@@ -501,8 +501,8 @@ export default function Home() {
               おはようございます。<br></br>
               {title}の{date}日の欠席登録ができます。
             </p>
-            <ScrollArea sx={{ height: 300 }}>
-              <Table sx={{ minWidth: 400 }}>
+            <ScrollArea sx={{ height: 200 }}>
+              <Table sx={{ minWidth: 300 }}>
                 <thead>
                   <tr>
                     <th>出欠</th>

@@ -34,6 +34,7 @@ export default function Home() {
       datedata: data.date,
       body: data.body,
       createtime: newdate,
+      attandece: [],
     })
       .then(() => {
         alert("会議を登録しました");
