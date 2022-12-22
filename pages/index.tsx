@@ -130,28 +130,30 @@ export default function Home() {
 
   //出席を登録する
   const updatefields = (data: FormData) => {
+    const userid = users.filter((user) => {
+      return user.univernumber == data.univernumber;
+    });
+    console.log(userid[0].id);
     //更新する
     let fieldToEdit = doc(database, "meeting", ID);
+    let usersToEdit = doc(database, "users", userid[0].id);
     //セットしたIDをセットする
     updateDoc(fieldToEdit, {
       attandece: arrayUnion(data.univernumber),
     })
       .then(() => {
-        // let fieldToEdit = doc(database, "users", ID);
-        // //セットしたIDをセットする
-        // updateDoc(fieldToEdit, {
-        //   attandece: data.attandece + 1,
-        // })
-        //   .then(() => {
-        //     setIsUpdate(false);
-        //     setIsPresent(false);
-        //     setIsOpen(false);
-        //     alert("出席登録しました");
-        //     router.push("/");
-        //   })
-        //   .catch((err) => {
-        //     console.log(err);
-        //   });
+        updateDoc(usersToEdit, {
+          attandece: +1,
+        })
+          .then(() => {
+            setIsUpdate(false);
+            setIsPresent(false);
+            setIsOpen(false);
+            router.push("/");
+          })
+          .catch((err) => {
+            console.log(err);
+          });
         setIsUpdate(false);
         setIsPresent(false);
         setIsOpen(false);
