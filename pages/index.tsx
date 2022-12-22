@@ -124,6 +124,8 @@ export default function Home() {
   const [isUpdate, setIsUpdate] = useState(false);
   const [date, setDate] = useState(null);
   const [title, setTitle] = useState("");
+  const [presentnum, setPresentnum] = useState(null);
+  const [absentnum, setAbsentnum] = useState();
   const [users, setUsers] = useState<any[]>([]);
   const router = useRouter();
   const target = moment().format("YYYY-MM-DD");
@@ -217,11 +219,12 @@ export default function Home() {
     console.log(ID);
   };
 
-  //出席表のモーダル
-  const getPresent = (id: any, date: any, title: any) => {
+  //出席表の表示モーダル
+  const getPresent = (id: any, date: any, title: any, attandece: any) => {
     setTitle(title);
     setDate(date);
     setID(id);
+    setPresentnum(attandece.length);
     setIsPresent(true);
     console.log(ID);
   };
@@ -257,47 +260,47 @@ export default function Home() {
     console.log(ID);
   };
 
-  // const sample_data = [
-  //   { name: "ONE PIECE", value: 1 },
-  //   { name: "呪術廻戦", value: 2 },
-  //   { name: "キングダム", value: 2 },
-  // ];
+  const sample_data = [
+    { name: "出席数", value: presentnum },
+    { name: "欠席数", value: 10 },
+  ];
 
-  // const COLORS = [
-  //   "#0088FE",
-  //   "#00C49F",
-  //   "#FFBB28",
-  //   "#FF8042",
-  //   "#ff6361",
-  //   "#8884d8",
-  //   "#C1C1C1",
-  // ];
-  // const RADIAN = Math.PI / 180;
-  // const renderCustomizedLabel = ({
-  //   cx,
-  //   cy,
-  //   midAngle,
-  //   innerRadius,
-  //   outerRadius,
-  //   percent,
-  //   index,
-  // }) => {
-  //   const radius = innerRadius + (outerRadius - innerRadius) * 0.6;
-  //   const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  //   const y = cy + radius * Math.sin(-midAngle * RADIAN);
+  const COLORS = [
+    "#0088FE",
+    "#00C49F",
+    "#FFBB28",
+    "#FF8042",
+    "#ff6361",
+    "#8884d8",
+    "#C1C1C1",
+  ];
 
-  //   return (
-  //     <text
-  //       x={x}
-  //       y={y}
-  //       fill="white"
-  //       textAnchor="middle"
-  //       dominantBaseline="central"
-  //     >
-  //       {`${(percent * 100).toFixed(0)}%`}
-  //     </text>
-  //   );
-  // };
+  const RADIAN = Math.PI / 180;
+  const renderCustomizedLabel = ({
+    cx,
+    cy,
+    midAngle,
+    innerRadius,
+    outerRadius,
+    percent,
+    index,
+  }: any) => {
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.6;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+    return (
+      <text
+        x={x}
+        y={y}
+        fill="white"
+        textAnchor="middle"
+        dominantBaseline="central"
+      >
+        {`${(percent * 100).toFixed(0)}%`}
+      </text>
+    );
+  };
   const [scrolled, setScrolled] = useState(false);
 
   return (
@@ -328,6 +331,30 @@ export default function Home() {
             >
               出席票を閉じる
             </Button>
+            <div>
+              <ResponsiveContainer height={256}>
+                <PieChart margin={{ top: 0, left: 0, right: 0, bottom: 0 }}>
+                  <Pie
+                    dataKey="value"
+                    data={sample_data}
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={80}
+                    labelLine={false}
+                    label={renderCustomizedLabel}
+                    isAnimationActive={true}
+                  >
+                    {sample_data.map((entry, index) => (
+                      <Cell fill={COLORS[index % COLORS.length]} key={index} />
+                    ))}
+                  </Pie>
+                  <Legend
+                    verticalAlign="bottom"
+                    wrapperStyle={{ bottom: 18 }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
             <ScrollArea sx={{ height: 300 }}>
               <Table sx={{ minWidth: 400 }}>
                 <thead
@@ -386,30 +413,6 @@ export default function Home() {
                   ))}
               </Table>
             </ScrollArea>
-            {/* <div>
-              <ResponsiveContainer height={256}>
-                <PieChart margin={{ top: 0, left: 0, right: 0, bottom: 0 }}>
-                  <Pie
-                    dataKey="value"
-                    data={sample_data}
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={80}
-                    labelLine={false}
-                    label={renderCustomizedLabel}
-                    isAnimationActive={true}
-                  >
-                    {sample_data.map((entry, index) => (
-                      <Cell fill={COLORS[index % COLORS.length]} key={index} />
-                    ))}
-                  </Pie>
-                  <Legend
-                    verticalAlign="bottom"
-                    wrapperStyle={{ bottom: 18 }}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            </div> */}
           </>
         )}
         <Modal
@@ -616,7 +619,12 @@ export default function Home() {
                     variant="outline"
                     color="cyan"
                     onClick={() =>
-                      getPresent(meeting.id, meeting.date, meeting.title)
+                      getPresent(
+                        meeting.id,
+                        meeting.date,
+                        meeting.title,
+                        meeting.attandece
+                      )
                     }
                   >
                     出席票を見る

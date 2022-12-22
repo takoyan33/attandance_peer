@@ -28,6 +28,8 @@ export default function Home() {
       univernumber: data.univernumber,
       grade: data.grade,
       createtime: newdate,
+      gender: "男性",
+      belong: true,
       attend: 0,
     })
       .then(() => {
