@@ -64,6 +64,7 @@ const useStyles = createStyles((theme) => ({
   header: {
     position: "sticky",
     top: 0,
+    zIndex: 100,
     backgroundColor:
       theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white,
     transition: "box-shadow 150ms ease",
@@ -134,6 +135,7 @@ export default function Home() {
       return user.univernumber == data.univernumber;
     });
     console.log(userid[0].id);
+    console.log(userid[0].attandece);
     //更新する
     let fieldToEdit = doc(database, "meeting", ID);
     let usersToEdit = doc(database, "users", userid[0].id);
@@ -143,7 +145,7 @@ export default function Home() {
     })
       .then(() => {
         updateDoc(usersToEdit, {
-          attandece: +1,
+          attandece: userid[0].attandece + 1,
         })
           .then(() => {
             setIsUpdate(false);
@@ -451,7 +453,7 @@ export default function Home() {
           </div>
         </Modal>
 
-        {/* <Modal
+        <Modal
           contentLabel="Example Modal"
           isOpen={modalabsentIsOpen}
           style={customStyles}
@@ -490,9 +492,8 @@ export default function Home() {
               </div>
             </form>
           </div>
-        </Modal> */}
-
-        <Modal
+        </Modal>
+        {/* <Modal
           contentLabel="Example Modal"
           isOpen={modalabsentIsOpen}
           style={customStyles}
@@ -503,9 +504,13 @@ export default function Home() {
               おはようございます。<br></br>
               {title}の{date}日の欠席登録ができます。
             </p>
-            <ScrollArea sx={{ height: 200 }}>
-              <Table sx={{ minWidth: 300 }}>
-                <thead>
+            <ScrollArea sx={{ height: 500, minWidth: 200 }}>
+              <Table sx={{ minWidth: 200 }}>
+                <thead
+                  className={cx(classes.header, {
+                    [classes.scrolled]: scrolled,
+                  })}
+                >
                   <tr>
                     <th>出欠</th>
                     <th>名前</th>
@@ -558,8 +563,7 @@ export default function Home() {
               </Table>
             </ScrollArea>
           </div>
-        </Modal>
-
+        </Modal> */}
         {meeting &&
           meeting.map((meeting) => (
             <div key={meeting.id} className="my-4 w-80 m-auto text-center">
@@ -601,10 +605,10 @@ export default function Home() {
                     variant="outline"
                     color="cyan"
                     onClick={() =>
-                      getPresent(meeting.id, meeting.date, meeting.title)
+                      getabesentPresent(meeting.id, meeting.date, meeting.title)
                     }
                   >
-                    出席票を見る
+                    欠席に変更する
                   </Button>
                 </div>
                 <div className="my-4 m-auto text-center">
@@ -612,10 +616,10 @@ export default function Home() {
                     variant="outline"
                     color="cyan"
                     onClick={() =>
-                      getabesentPresent(meeting.id, meeting.date, meeting.title)
+                      getPresent(meeting.id, meeting.date, meeting.title)
                     }
                   >
-                    欠席に変更する
+                    出席票を見る
                   </Button>
                 </div>
               </Paper>

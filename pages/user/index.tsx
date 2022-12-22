@@ -56,6 +56,7 @@ const useStyles = createStyles((theme) => ({
   header: {
     position: "sticky",
     top: 0,
+    zIndex: 100,
     backgroundColor:
       theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white,
     transition: "box-shadow 150ms ease",
@@ -237,9 +238,9 @@ export default function Edit() {
                     </td>
                     <td>{user.univernumber}</td>
                     <td>{user.grade}</td>
-                    <td>{meeting.length}</td>
-                    <td>2</td>
-                    <td>50%</td>
+                    <td>{user.attandece}</td>
+                    <td>{meeting.length - user.attandece}</td>
+                    <td>{(user.attandece / meeting.length) * 100}%</td>
                     <td>
                       <button
                         onClick={() =>
