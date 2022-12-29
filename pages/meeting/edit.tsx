@@ -5,7 +5,7 @@ import { Input } from "@mantine/core";
 import { Button } from "@mantine/core";
 import { useState, useEffect } from "react";
 import { database } from "../../firebaseConfig";
-import { collection, addDoc, onSnapshot, getDocs } from "firebase/firestore";
+import { collection, addDoc, onSnapshot, getDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { query, orderBy } from "firebase/firestore";
 import { useForm } from "react-hook-form";
@@ -22,9 +22,27 @@ import {
   Text,
 } from "@mantine/core";
 import Modal from "react-modal";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-export default function Home() {
-  const { register, handleSubmit } = useForm();
+export default function Edit() {
+  const notify = () =>
+    toast.success("ユーザー編集しました", {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
   const [title, setTitle] = useState("");
   const [meeting, setMeeting] = useState<any[]>([]);
   const [users, setUsers] = useState<any[]>([]);
@@ -50,7 +68,7 @@ export default function Home() {
         setDate("");
         setBody("");
         setTitle("");
-        alert("ユーザー編集しました");
+        notify();
       })
       .catch((err) => {
         console.log(err);
@@ -74,20 +92,36 @@ export default function Home() {
     });
   }, []);
 
-  //ユーザー編集
+  //個別会議を取得
+  useEffect(() => {
+    if (isUpdate) {
+      const fetch = async () => {
+        const fieldToEdit = doc(database, "meeting", ID);
+        const docSnap = await getDoc(fieldToEdit);
+        if (docSnap.exists()) {
+          reset(docSnap.data());
+        } else {
+          console.log("No such document!");
+        }
+      };
+      fetch();
+    }
+  }, [isUpdate]);
+
+  //会議の編集
   const getuserID = (id: string, title: string, date: any, body: string) => {
     setID(id);
     setTitle(title);
-    setDate(date);
-    setBody(body);
+    // setDate(date);
+    // setBody(body);
     setIsUpdate(true);
   };
 
   //出席登録の取り消しモーダル
   const closeaddPresent = (id: any) => {
     setID(null);
-    setDate("");
-    setBody("");
+    // setDate("");
+    // setBody("");
     setTitle("");
     setIsUpdate(false);
   };
@@ -100,6 +134,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <MuiNavbar />
+      <ToastContainer />
       <div className="max-w-5xl m-auto">
         <h2 className="text-center text-2xl font-bold mb-6 mt-10">
           会議を編集する
@@ -122,12 +157,20 @@ export default function Home() {
             </h2>
             <form onSubmit={handleSubmit(updatefields)}>
               <div className="max-w-5xl m-auto">
-                <label htmlFor="title">会議名</label>
-                <Input type="text" id="title" {...register("title")} />
+                <label htmlFor="title">会議名*</label>
+                <Input
+                  type="text"
+                  id="title"
+                  {...register("title", { required: true })}
+                />
               </div>
               <div>
-                <label htmlFor="date">日付</label>
-                <Input type="date" id="date" {...register("date")} />
+                <label htmlFor="date">日付*</label>
+                <Input
+                  type="date"
+                  id="date"
+                  {...register("date", { required: true })}
+                />
               </div>
               <div>
                 <label htmlFor="body">内容</label>
@@ -186,7 +229,7 @@ export default function Home() {
                             meeting.body
                           )
                         }
-                        className="border"
+                        className="text-blue-600"
                       >
                         編集する
                       </button>

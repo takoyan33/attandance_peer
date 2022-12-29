@@ -4,32 +4,40 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
 } from "firebase/auth";
-import Image from "next/image";
-import { Inter } from "@next/font/google";
 import { Input } from "@mantine/core";
-import { useState, useEffect } from "react";
-import { database } from "../../firebaseConfig";
-import { collection, addDoc, onSnapshot, getDocs } from "firebase/firestore";
 import { useRouter } from "next/router";
-import { query, orderBy } from "firebase/firestore";
 import { useForm } from "react-hook-form";
 import { InputBase, Button } from "@mantine/core";
 import { MuiNavbar } from "../../components/MuiNavbar";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-export default function Home() {
+export default function Login() {
   const { register, handleSubmit } = useForm();
   const router = useRouter();
   const auth = getAuth();
 
+  const notify = () =>
+    toast.success("ログインできました", {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+
   const SignIn = (data: any) => {
-    console.log(data.email);
-    alert("ログインしました");
-    console.log(data.password);
     signInWithEmailAndPassword(auth, data.email, data.password)
       .then((userCredential: any) => {
         const user = userCredential.user;
         localStorage.setItem("Token", user.accessToken);
-        router.push("/");
+        notify();
+        setTimeout(() => {
+          router.push("/");
+        }, 2000);
       })
       .catch((err) => {
         alert("ログインできません");
@@ -46,7 +54,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <MuiNavbar />
-
+      <ToastContainer />
       <div className="max-w-4xl m-auto mt-10">
         <h2 className="text-center">管理者ログイン</h2>
 

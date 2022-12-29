@@ -207,7 +207,7 @@ export default function Edit() {
             <h2 className="text-center text-2xl">{fullname}さんを編集画面</h2>
             <form onSubmit={handleSubmit(updatefields)}>
               <div>
-                <label htmlFor="fullname">名前</label>
+                <label htmlFor="fullname">名前*</label>
                 <Input
                   type="text"
                   id="fullname"
@@ -215,7 +215,7 @@ export default function Edit() {
                 />
               </div>
               <div>
-                <label htmlFor="univernumber">学籍番号</label>
+                <label htmlFor="univernumber">学籍番号*</label>
                 <Input
                   type="number"
                   id="univernumber"
@@ -224,7 +224,7 @@ export default function Edit() {
               </div>
               <div>
                 <InputBase
-                  label="学年"
+                  label="学年*"
                   component="select"
                   mt="md"
                   id="grade"
@@ -238,7 +238,7 @@ export default function Edit() {
               </div>
               <div>
                 <InputBase
-                  label="性別"
+                  label="性別*"
                   component="select"
                   mt="md"
                   id="gender"
@@ -251,7 +251,7 @@ export default function Edit() {
               </div>
               <div>
                 <InputBase
-                  label="現在の在籍状況"
+                  label="現在の在籍状況*"
                   component="select"
                   mt="md"
                   id="belong"
