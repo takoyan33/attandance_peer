@@ -1,24 +1,21 @@
 import Head from "next/head";
-import Image from "next/image";
-import { Inter } from "@next/font/google";
 import { Input } from "@mantine/core";
-import { useState, useEffect } from "react";
 import { database } from "../../firebaseConfig";
-import { collection, addDoc, onSnapshot, getDocs } from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
-import { query, orderBy } from "firebase/firestore";
 import { useForm } from "react-hook-form";
 import { Button } from "@mantine/core";
 import { InputBase } from "@mantine/core";
 import { MuiNavbar } from "../../components/MuiNavbar";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { notify, signupmissnotify } from "../../components/SiteModal";
 
 export default function Home() {
   const { register, handleSubmit } = useForm();
   const router = useRouter();
   const usersRef = collection(database, "users");
   //新しい順
-  const q = query(usersRef, orderBy("timestamp", "desc"));
-
   const addDate = (data: any) => {
     const newdate = new Date().toLocaleString("ja-JP");
     //日本時間を代入
@@ -28,15 +25,16 @@ export default function Home() {
       univernumber: data.univernumber,
       grade: data.grade,
       createtime: newdate,
-      gender: "男性",
+      gender: data.gender,
       belong: true,
       attend: 0,
     })
       .then(() => {
-        alert("ユーザー登録しました");
+        notify("ユーザー登録しました");
         router.push("/");
       })
       .catch((err: any) => {
+        signupmissnotify("ユーザー登録に失敗しました");
         console.error(err);
       });
   };
@@ -51,7 +49,7 @@ export default function Home() {
       </Head>
 
       <MuiNavbar />
-
+      <ToastContainer />
       <div className="max-w-5xl m-auto">
         <h2 className="text-center text-2xl font-bold mb-6 mt-10">
           ユーザーを登録する
@@ -70,6 +68,17 @@ export default function Home() {
                 id="univernumber"
                 {...register("univernumber")}
               />
+              <InputBase
+                label="性別"
+                component="select"
+                mt="md"
+                id="gender"
+                {...register("gender")}
+              >
+                <option value="男性">男性</option>
+                <option value="女性">女性</option>
+                <option value="非公開">非公開</option>
+              </InputBase>
 
               <InputBase
                 label="年度"

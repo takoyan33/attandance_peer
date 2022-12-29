@@ -1,18 +1,13 @@
 import Head from "next/head";
-import Link from "next/link";
 import { useState, useEffect } from "react";
-import { Paper, ThemeIcon } from "@mantine/core";
+import { Paper } from "@mantine/core";
 import { database } from "../firebaseConfig";
 import moment from "moment";
 import {
   collection,
-  addDoc,
   onSnapshot,
-  getDocs,
   doc,
-  getDoc,
   updateDoc,
-  deleteDoc,
   arrayUnion,
   arrayRemove,
 } from "firebase/firestore";
@@ -33,8 +28,9 @@ import {
 } from "@mantine/core";
 import { MuiNavbar } from "../components/MuiNavbar";
 import Modal from "react-modal";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { notify, signupmissnotify } from "../components/SiteModal";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -102,18 +98,6 @@ const customStyles = {
 };
 
 export default function Home() {
-  const notify = () =>
-    toast.success("出席登録ができました", {
-      position: "top-center",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
-
   let subtitle: HTMLHeadingElement | null;
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
   const [modalabsentIsOpen, setabsentIsOpen] = useState<boolean>(false);
@@ -143,7 +127,6 @@ export default function Home() {
   const [users, setUsers] = useState<any[]>([]);
   const router = useRouter();
   const target = moment().format("YYYY-MM-DD");
-  console.log(target);
 
   //出席を登録する
   const updatefields = (data: FormData) => {
@@ -167,9 +150,10 @@ export default function Home() {
             setIsUpdate(false);
             setIsPresent(false);
             setIsOpen(false);
-            notify();
+            notify("出席登録ができました");
           })
           .catch((err) => {
+            signupmissnotify("出席登録に失敗しました");
             console.log(err);
           });
       })
@@ -189,10 +173,11 @@ export default function Home() {
       .then(() => {
         setIsUpdate(false);
         setabsentIsOpen(false);
-        alert("出席を削除しました");
+        notify("欠席に変更しました");
         router.push("/");
       })
       .catch((err) => {
+        signupmissnotify("欠席に変更失敗しました");
         console.log(err);
       });
   };
@@ -276,10 +261,7 @@ export default function Home() {
     { name: "欠席数", value: absentnum },
   ];
 
-  const COLORS = [
-    "#0088FE",
-    "#FF8042",
-  ];
+  const COLORS = ["#0088FE", "#FF8042"];
 
   const RADIAN = Math.PI / 180;
   const renderCustomizedLabel = ({

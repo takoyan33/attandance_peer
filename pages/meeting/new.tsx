@@ -1,19 +1,19 @@
 import Head from "next/head";
-import Image from "next/image";
-import { Inter } from "@next/font/google";
 import { useState, useEffect } from "react";
 import { database } from "../../firebaseConfig";
-import { collection, addDoc, onSnapshot, getDocs } from "firebase/firestore";
+import { collection, addDoc, getDocs } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { query, orderBy } from "firebase/firestore";
 import { useForm } from "react-hook-form";
 import { Input } from "@mantine/core";
 import { MuiNavbar } from "../../components/MuiNavbar";
 import { Button } from "@mantine/core";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { notify, signupmissnotify } from "../../components/SiteModal";
 
 export default function Home() {
   const { register, handleSubmit } = useForm();
-  const [title, setTitle] = useState("");
   const [meeting, setMeeting] = useState<any[]>([]);
   const [users, setUsers] = useState<any[]>([]);
   const databaseRef = collection(database, "meeting");
@@ -37,10 +37,11 @@ export default function Home() {
       attandece: [],
     })
       .then(() => {
-        alert("会議を登録しました");
+        notify("会議を登録しました");
         router.push("/");
       })
       .catch((err: any) => {
+        signupmissnotify("会議登録に失敗しました");
         console.error(err);
       });
   };
@@ -65,6 +66,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <MuiNavbar />
+      <ToastContainer />
       <div className="max-w-5xl m-auto">
         <h2 className="text-center text-2xl font-bold mb-6 mt-10">
           会議を登録する

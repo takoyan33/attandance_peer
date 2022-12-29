@@ -9,38 +9,27 @@ import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { InputBase, Button } from "@mantine/core";
 import { MuiNavbar } from "../../components/MuiNavbar";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { notify, signupmissnotify } from "../../components/SiteModal";
 
 export default function Login() {
   const { register, handleSubmit } = useForm();
   const router = useRouter();
   const auth = getAuth();
 
-  const notify = () =>
-    toast.success("ログインできました", {
-      position: "top-center",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
-
   const SignIn = (data: any) => {
     signInWithEmailAndPassword(auth, data.email, data.password)
       .then((userCredential: any) => {
         const user = userCredential.user;
         localStorage.setItem("Token", user.accessToken);
-        notify();
+        notify("ログインできました");
         setTimeout(() => {
           router.push("/");
         }, 2000);
       })
       .catch((err) => {
-        alert("ログインできません");
+        signupmissnotify("ログインできません");
         console.log(err);
       });
   };

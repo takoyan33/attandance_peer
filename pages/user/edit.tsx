@@ -1,13 +1,11 @@
 import Head from "next/head";
 import "tailwindcss/tailwind.css";
-import { Inter } from "@next/font/google";
 import { Input } from "@mantine/core";
 import { Button } from "@mantine/core";
 import { useState, useEffect } from "react";
-import { database, db } from "../../firebaseConfig";
+import { database } from "../../firebaseConfig";
 import { collection, addDoc, onSnapshot, getDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
-import { query, orderBy } from "firebase/firestore";
 import { useForm } from "react-hook-form";
 import { MuiNavbar } from "../../components/MuiNavbar";
 import { doc, updateDoc } from "firebase/firestore";
@@ -20,9 +18,10 @@ import {
   Group,
   Avatar,
   Text,
-  TextInput,
 } from "@mantine/core";
-import Modal from "react-modal";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { notify, signupmissnotify } from "../../components/SiteModal";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -113,9 +112,10 @@ export default function Edit() {
         setFullname("");
         setUnivernumber("");
         setGrade("");
-        alert("ユーザー編集しました");
+        notify("ユーザー編集しました");
       })
       .catch((err) => {
+        signupmissnotify("ユーザー編集に失敗しました");
         console.log(err);
       });
   };
@@ -188,6 +188,7 @@ export default function Edit() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <MuiNavbar />
+      <ToastContainer />
       <div className="max-w-5xl m-auto">
         <h2 className="text-center text-2xl font-bold mb-6 mt-10">
           ユーザーを編集する

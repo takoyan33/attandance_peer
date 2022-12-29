@@ -11,7 +11,6 @@ import { query, orderBy } from "firebase/firestore";
 import { useForm } from "react-hook-form";
 import { MuiNavbar } from "../../components/MuiNavbar";
 import { doc, updateDoc } from "firebase/firestore";
-import { InputBase } from "@mantine/core";
 import moment from "moment";
 import {
   createStyles,
@@ -22,22 +21,11 @@ import {
   Avatar,
   Text,
 } from "@mantine/core";
-import Modal from "react-modal";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { notify, signupmissnotify } from "../../components/SiteModal";
 
 export default function Edit() {
-  const notify = () =>
-    toast.success("ユーザー編集しました", {
-      position: "top-center",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
   const {
     register,
     handleSubmit,
@@ -70,9 +58,10 @@ export default function Edit() {
         setDate("");
         setBody("");
         setTitle("");
-        notify();
+        notify("ユーザーを編集しました");
       })
       .catch((err) => {
+        signupmissnotify("ユーザー編集に失敗しました");
         console.log(err);
       });
   };

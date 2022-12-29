@@ -9,7 +9,6 @@ import { useRouter } from "next/router";
 import { query, orderBy } from "firebase/firestore";
 import { useForm } from "react-hook-form";
 import { InputBase } from "@mantine/core";
-
 import {
   createStyles,
   Table,

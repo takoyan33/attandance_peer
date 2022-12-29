@@ -16,7 +16,6 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
-import Modal from "react-modal";
 
 const useStyles = createStyles((theme) => ({
   card: {
