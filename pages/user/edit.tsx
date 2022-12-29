@@ -313,7 +313,7 @@ export default function Edit() {
                             user.belong
                           )
                         }
-                        className="text-blue-600"
+                        className="text-blue-600 underline"
                       >
                         編集する
                       </button>

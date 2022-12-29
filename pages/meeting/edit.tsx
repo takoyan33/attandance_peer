@@ -12,6 +12,7 @@ import { useForm } from "react-hook-form";
 import { MuiNavbar } from "../../components/MuiNavbar";
 import { doc, updateDoc } from "firebase/firestore";
 import { InputBase } from "@mantine/core";
+import moment from "moment";
 import {
   createStyles,
   Table,
@@ -51,6 +52,7 @@ export default function Edit() {
   const [isUpdate, setIsUpdate] = useState(false);
   const [date, setDate] = useState("");
   const [body, setBody] = useState("");
+  const target = moment().format("YYYY-MM-DD");
 
   //ユーザーを編集する
   const updatefields = (data: any) => {
@@ -190,6 +192,7 @@ export default function Edit() {
             <thead>
               <tr>
                 <th>日付</th>
+                <th>開催</th>
                 <th>会議</th>
                 <th>内容</th>
                 <th>出席数</th>
@@ -203,6 +206,13 @@ export default function Edit() {
                 meeting.map((meeting) => (
                   <tr key={meeting.id}>
                     <td>{meeting.date}</td>
+                    <td>
+                      {target < meeting.date ? (
+                        <span className=" text-green-700">開催前</span>
+                      ) : (
+                        <span className="text-blue-600">開催後</span>
+                      )}
+                    </td>
                     <td>
                       <Group spacing="xs">
                         <Text size="sm" weight={300}>
@@ -229,7 +239,7 @@ export default function Edit() {
                             meeting.body
                           )
                         }
-                        className="text-blue-600"
+                        className="text-blue-600 underline"
                       >
                         編集する
                       </button>

@@ -139,7 +139,7 @@ export default function Home() {
   const [date, setDate] = useState(null);
   const [title, setTitle] = useState("");
   const [presentnum, setPresentnum] = useState(null);
-  const [absentnum, setAbsentnum] = useState();
+  const [absentnum, setAbsentnum] = useState<any>(null);
   const [users, setUsers] = useState<any[]>([]);
   const router = useRouter();
   const target = moment().format("YYYY-MM-DD");
@@ -216,7 +216,6 @@ export default function Home() {
   }, []);
 
   const dateja = new Date().toLocaleString("ja-JP");
-  console.log(dateja);
 
   //出席登録のモーダル表示
   const getID = (id: any, date: any, title: any) => {
@@ -235,6 +234,9 @@ export default function Home() {
     setID(id);
     setPresentnum(attandece.length);
     setIsPresent(true);
+    setAbsentnum(users.length);
+    console.log("欠席者数");
+    console.log(absentnum);
     console.log(ID);
   };
 
@@ -271,17 +273,12 @@ export default function Home() {
 
   const sample_data = [
     { name: "出席数", value: presentnum },
-    { name: "欠席数", value: 10 },
+    { name: "欠席数", value: absentnum },
   ];
 
   const COLORS = [
     "#0088FE",
-    "#00C49F",
-    "#FFBB28",
     "#FF8042",
-    "#ff6361",
-    "#8884d8",
-    "#C1C1C1",
   ];
 
   const RADIAN = Math.PI / 180;
@@ -602,6 +599,9 @@ export default function Home() {
                   {Math.floor((meeting.attandece?.length / users.length) * 100)}
                   ％
                 </Text>
+                <Text size="sm" mt="sm" color="dimmed">
+                  {meeting.body}
+                </Text>
                 <div className="my-4 m-auto text-center">
                   <Button
                     variant="outline"
@@ -646,70 +646,4 @@ export default function Home() {
       </div>
     </>
   );
-}
-
-{
-  /* {meeting &&
-          meeting.map((meeting) => (
-            <div key={meeting.id}>
-              <CardGradient
-                id={meeting.id}
-                title={meeting.title}
-                date={meeting.date}
-                present={meeting.attandece?.length}
-                absent={users.length - meeting.attandece?.length}
-                wariai={Math.floor(
-                  (meeting.attandece?.length / users.length) * 100
-                )}
-                onClick={}
-              /> */
-}
-{
-  /* <h2>{meeting.title}</h2>
-              <h3>日付：{meeting.date}</h3> */
-}
-{
-  /* 出席{meeting.attandece?.length}人 欠席
-                {users.length - meeting.attandece?.length}人 出席率 */
-}
-{
-  /* {Math.floor((meeting.attandece?.length / users.length) * 100)}％ */
-}
-{
-  /* <Button
-                variant="outline"
-                color="cyan"
-                className=" my-2 m-4"
-                onClick={() => getID(meeting.id, meeting.date, meeting.title)}
-              >
-                出席登録する
-              </Button>
-              <Button
-                variant="outline"
-                color="cyan"
-                className=" my-2 m-4"
-                onClick={() => getPresent(meeting.id)}
-              >
-                出席票を見る
-              </Button>
-              {IsPresent && (
-                <Button
-                  type="submit"
-                  variant="outline"
-                  color="cyan"
-                  onClick={() => closePresent(meeting.id)}
-                >
-                  出席票を閉じる
-                </Button>
-              )}
-              <Button
-                variant="outline"
-                color="cyan"
-                className=" my-2 m-4"
-                onClick={() => getID(meeting.id, meeting.date, meeting.title)}
-              >
-                出席を変更する
-              </Button>
-            </div>
-          ))} */
 }

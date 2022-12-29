@@ -1,17 +1,11 @@
 import Head from "next/head";
 import "tailwindcss/tailwind.css";
-import { Inter } from "@next/font/google";
-import { Input } from "@mantine/core";
 import { Button } from "@mantine/core";
 import { useState, useEffect } from "react";
 import { database } from "../../firebaseConfig";
 import { collection, addDoc, onSnapshot, getDocs } from "firebase/firestore";
-import { useRouter } from "next/router";
 import { query, orderBy } from "firebase/firestore";
-import { useForm } from "react-hook-form";
 import { MuiNavbar } from "../../components/MuiNavbar";
-import { doc, updateDoc } from "firebase/firestore";
-import { InputBase } from "@mantine/core";
 import {
   createStyles,
   Table,
@@ -79,11 +73,9 @@ const useStyles = createStyles((theme) => ({
 }));
 
 export default function Edit() {
-  const { register, handleSubmit } = useForm();
-  const [title, setTitle] = useState("");
   const [meeting, setMeeting] = useState<any[]>([]);
   const [users, setUsers] = useState<any[]>([]);
-  const router = useRouter();
+  const [attandece, setAttandece] = useState(null);
   const [ID, setID] = useState<any>(null);
   const [isUpdate, setIsUpdate] = useState(false);
   const [fullname, setFullname] = useState("");
@@ -107,17 +99,25 @@ export default function Edit() {
       );
     });
   }, []);
+
   //ユーザーIDを取得
-  //ユーザー編集
-  const getuserID = (id: any, fullname: any, univernumber: any, grade: any) => {
+  const getuserID = (
+    id: any,
+    fullname: any,
+    univernumber: any,
+    grade: any,
+    attandece: any
+  ) => {
     setID(id);
     setFullname(fullname);
     setUnivernumber(univernumber);
     setGrade(grade);
     setIsUpdate(true);
+    setAttandece(attandece);
     console.log(ID);
     console.log(fullname);
     console.log(univernumber);
+    console.log(attandece);
   };
 
   //出席登録の取り消しモーダル
@@ -157,7 +157,7 @@ export default function Edit() {
             </Button>
             <h2 className="text-center text-2xl">{fullname}さんの出欠状況</h2>
 
-            <p>出席数</p>
+            <p>出席数{attandece}</p>
             <p>欠席数</p>
 
             <ScrollArea sx={{ height: 300 }}>
@@ -220,7 +220,7 @@ export default function Edit() {
                 <th>出席数</th>
                 <th>欠席数</th>
                 <th>出席率</th>
-                <th>詳しく見る</th>
+                <th>詳細</th>
               </tr>
             </thead>
             <tbody>
@@ -246,9 +246,11 @@ export default function Edit() {
                             user.id,
                             user.fullname,
                             user.univernumber,
-                            user.grade
+                            user.grade,
+                            user.attandece
                           )
                         }
+                        className="text-blue-600 underline"
                       >
                         確認する
                       </button>
