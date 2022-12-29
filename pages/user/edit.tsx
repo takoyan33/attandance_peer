@@ -4,8 +4,8 @@ import { Inter } from "@next/font/google";
 import { Input } from "@mantine/core";
 import { Button } from "@mantine/core";
 import { useState, useEffect } from "react";
-import { database } from "../../firebaseConfig";
-import { collection, addDoc, onSnapshot, getDocs } from "firebase/firestore";
+import { database, db } from "../../firebaseConfig";
+import { collection, addDoc, onSnapshot, getDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { query, orderBy } from "firebase/firestore";
 import { useForm } from "react-hook-form";
@@ -79,9 +79,12 @@ const useStyles = createStyles((theme) => ({
 }));
 
 export default function Edit() {
-  const { register, handleSubmit } = useForm();
-  const [title, setTitle] = useState("");
-  const [meeting, setMeeting] = useState<any[]>([]);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
   const [users, setUsers] = useState<any[]>([]);
   const router = useRouter();
   const [ID, setID] = useState<any>(null);
@@ -89,6 +92,8 @@ export default function Edit() {
   const [fullname, setFullname] = useState("");
   const [univernumber, setUnivernumber] = useState("");
   const [grade, setGrade] = useState("");
+  const [gender, setGender] = useState("");
+  const [belong, setBelong] = useState("");
 
   //ユーザーを編集する
   const updatefields = (data: any) => {
@@ -99,6 +104,8 @@ export default function Edit() {
       fullname: data.fullname,
       univernumber: data.univernumber,
       grade: data.grade,
+      gender: data.gender,
+      belong: data.belong,
     })
       .then(() => {
         setIsUpdate(false);
@@ -116,6 +123,7 @@ export default function Edit() {
   //usersを取得
   useEffect(() => {
     const usersCollectionRef = collection(database, "users");
+
     onSnapshot(usersCollectionRef, (querySnapshot) => {
       setUsers(
         querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
@@ -123,22 +131,48 @@ export default function Edit() {
     });
   }, []);
 
+  useEffect(() => {
+    if (isUpdate) {
+      const fetch = async () => {
+        const fieldToEdit = doc(database, "users", ID);
+        const docSnap = await getDoc(fieldToEdit);
+        if (docSnap.exists()) {
+          reset(docSnap.data());
+        } else {
+          console.log("No such document!");
+        }
+      };
+      fetch();
+    }
+  }, [isUpdate]);
+
   //ユーザー編集
-  const getuserID = (id: any, fullname: any, univernumber: any, grade: any) => {
+  const getuserID = (
+    id: any,
+    fullname: any,
+    univernumber: any,
+    grade: any,
+    gender: any,
+    belong: any
+  ) => {
     setID(id);
-    setFullname(fullname);
-    setUnivernumber(univernumber);
-    setGrade(grade);
     setIsUpdate(true);
-    console.log(ID);
-    console.log(fullname);
-    console.log(univernumber);
+    setFullname(fullname);
+    // setUnivernumber(univernumber);
+    // setGrade(grade);
+    // setGender(gender);
+    // setBelong(belong);
   };
 
   //出席登録の取り消しモーダル
   const closeaddPresent = (id: any) => {
-    setID(id);
+    setID(null);
     setIsUpdate(false);
+    setFullname("");
+    // setUnivernumber("");
+    // setGrade("");
+    // setGender("");
+    // setBelong("");
   };
 
   console.log(users);
@@ -174,14 +208,18 @@ export default function Edit() {
             <form onSubmit={handleSubmit(updatefields)}>
               <div>
                 <label htmlFor="fullname">名前</label>
-                <Input type="text" id="fullname" {...register("fullname")} />
+                <Input
+                  type="text"
+                  id="fullname"
+                  {...register("fullname", { required: true })}
+                />
               </div>
               <div>
                 <label htmlFor="univernumber">学籍番号</label>
                 <Input
                   type="number"
                   id="univernumber"
-                  {...register("univernumber")}
+                  {...register("univernumber", { required: true })}
                 />
               </div>
               <div>
@@ -189,8 +227,8 @@ export default function Edit() {
                   label="学年"
                   component="select"
                   mt="md"
-                  id="univeryear"
-                  {...register("univeryear")}
+                  id="grade"
+                  {...register("grade", { required: true })}
                 >
                   <option value="インターン">インターン</option>
                   <option value="1年目">1年目</option>
@@ -203,8 +241,8 @@ export default function Edit() {
                   label="性別"
                   component="select"
                   mt="md"
-                  id="belong"
-                  {...register("belong")}
+                  id="gender"
+                  {...register("gender", { required: true })}
                 >
                   <option value="男性">男性</option>
                   <option value="女性">女性</option>
@@ -217,7 +255,7 @@ export default function Edit() {
                   component="select"
                   mt="md"
                   id="belong"
-                  {...register("belong")}
+                  {...register("belong", { required: true })}
                 >
                   <option value="在籍中">在籍中</option>
                   <option value="未在籍">未在籍</option>
@@ -261,8 +299,8 @@ export default function Edit() {
                     </td>
                     <td>{user.univernumber}</td>
                     <td>{user.grade}</td>
-                    <td>男</td>
-                    <td>在籍中</td>
+                    <td>{user.gender}</td>
+                    <td>{user.belong}</td>
                     <td>
                       <button
                         onClick={() =>
@@ -270,10 +308,12 @@ export default function Edit() {
                             user.id,
                             user.fullname,
                             user.univernumber,
-                            user.grade
+                            user.grade,
+                            user.gender,
+                            user.belong
                           )
                         }
-                        className="border"
+                        className="text-blue-600"
                       >
                         編集する
                       </button>

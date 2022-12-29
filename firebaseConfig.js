@@ -28,5 +28,5 @@ initializeFirestore(app, {
 export const database = getFirestore(app);
 export const storage = getStorage(app);
 export const auth = getAuth(app);
-export const db = getFirestore(app);
+export const db = getFirestore();
 export const firestore = getFirestore(app);
