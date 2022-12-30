@@ -31,6 +31,7 @@ import Modal from "react-modal";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { notify, signupmissnotify } from "../components/SiteModal";
+import TextField from "@mui/material/TextField";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -97,10 +98,11 @@ const customStyles = {
   },
 };
 
-export default function Home() {
+export default function Index() {
   let subtitle: HTMLHeadingElement | null;
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
   const [modalabsentIsOpen, setabsentIsOpen] = useState<boolean>(false);
+  const [searchName, setSearchName] = useState("");
 
   function closeModal() {
     setIsOpen(false);
@@ -344,6 +346,15 @@ export default function Home() {
                 </PieChart>
               </ResponsiveContainer>
             </div>
+            <TextField
+              type="text"
+              id="outlined-basic"
+              label="名前で検索する"
+              variant="outlined"
+              onChange={(event) => {
+                setSearchName(event.target.value);
+              }}
+            />
             <ScrollArea sx={{ height: 300 }}>
               <Table sx={{ minWidth: 400 }}>
                 <thead
@@ -358,44 +369,59 @@ export default function Home() {
                     <th style={{ width: 70 }}>年次</th>
                   </tr>
                 </thead>
+
                 {meeting &&
                   meeting.map((meeting) => (
                     <>
                       {meeting.id === ID && (
                         <tbody key={meeting.id}>
                           {users &&
-                            users.map((user) => (
-                              <tr key={user.id}>
-                                <td>
-                                  {meeting.attandece &&
-                                    meeting.attandece.map(
-                                      (attend: any, i: number) => (
-                                        <div key={i}>
-                                          {attend === user.univernumber ? (
-                                            <div className="mt-2">
-                                              <Checkbox
-                                                transitionDuration={0}
-                                                checked
-                                              />
-                                            </div>
-                                          ) : (
-                                            <></>
-                                          )}
-                                        </div>
-                                      )
-                                    )}
-                                </td>
-                                <td>
-                                  <Group spacing="sm">
-                                    <Text size="sm" weight={500}>
-                                      {user.fullname}
-                                    </Text>
-                                  </Group>
-                                </td>
-                                <td>{user.univernumber}</td>
-                                <td>{user.grade}</td>
-                              </tr>
-                            ))}
+                            users
+                              .filter((data) => {
+                                if (searchName === "") {
+                                  return data;
+                                  //そのまま返す
+                                } else if (
+                                  data.fullname
+                                    .toLowerCase()
+                                    .includes(searchName.toLowerCase())
+                                  //valのnameが含んでいたら小文字で返す　含んでいないvalは返さない
+                                ) {
+                                  return data;
+                                }
+                              })
+                              .map((user) => (
+                                <tr key={user.id}>
+                                  <td>
+                                    {meeting.attandece &&
+                                      meeting.attandece.map(
+                                        (attend: any, i: number) => (
+                                          <div key={i}>
+                                            {attend === user.univernumber ? (
+                                              <div className="mt-2">
+                                                <Checkbox
+                                                  transitionDuration={0}
+                                                  checked
+                                                />
+                                              </div>
+                                            ) : (
+                                              <></>
+                                            )}
+                                          </div>
+                                        )
+                                      )}
+                                  </td>
+                                  <td>
+                                    <Group spacing="sm">
+                                      <Text size="sm" weight={500}>
+                                        {user.fullname}
+                                      </Text>
+                                    </Group>
+                                  </td>
+                                  <td>{user.univernumber}</td>
+                                  <td>{user.grade}</td>
+                                </tr>
+                              ))}
                         </tbody>
                       )}
                     </>

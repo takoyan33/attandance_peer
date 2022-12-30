@@ -4,7 +4,8 @@ import { Input } from "@mantine/core";
 import { Button } from "@mantine/core";
 import { useState, useEffect } from "react";
 import { database } from "../../firebaseConfig";
-import { collection, addDoc, onSnapshot, getDoc } from "firebase/firestore";
+import { collection, onSnapshot, getDoc } from "firebase/firestore";
+import TextField from "@mui/material/TextField";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { MuiNavbar } from "../../components/MuiNavbar";
@@ -13,7 +14,6 @@ import { InputBase } from "@mantine/core";
 import {
   createStyles,
   Table,
-  Checkbox,
   ScrollArea,
   Group,
   Avatar,
@@ -93,6 +93,7 @@ export default function Edit() {
   const [grade, setGrade] = useState("");
   const [gender, setGender] = useState("");
   const [belong, setBelong] = useState("");
+  const [searchName, setSearchName] = useState("");
 
   //ユーザーを編集する
   const updatefields = (data: any) => {
@@ -271,6 +272,16 @@ export default function Edit() {
           </div>
         )}
 
+        <TextField
+          type="text"
+          id="outlined-basic"
+          label="名前で検索する"
+          variant="outlined"
+          onChange={(event) => {
+            setSearchName(event.target.value);
+          }}
+        />
+
         <ScrollArea sx={{ height: 500 }}>
           <Table sx={{ minWidth: 1000 }}>
             <thead
@@ -289,38 +300,52 @@ export default function Edit() {
             </thead>
             <tbody>
               {users &&
-                users.map((user) => (
-                  <tr key={user.id}>
-                    <td>
-                      <Group spacing="xs">
-                        <Text size="sm" weight={300}>
-                          {user.fullname}
-                        </Text>
-                      </Group>
-                    </td>
-                    <td>{user.univernumber}</td>
-                    <td>{user.grade}</td>
-                    <td>{user.gender}</td>
-                    <td>{user.belong}</td>
-                    <td>
-                      <button
-                        onClick={() =>
-                          getuserID(
-                            user.id,
-                            user.fullname,
-                            user.univernumber,
-                            user.grade,
-                            user.gender,
-                            user.belong
-                          )
-                        }
-                        className="text-blue-600 underline"
-                      >
-                        編集する
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                users
+                  .filter((data) => {
+                    if (searchName === "") {
+                      return data;
+                      //そのまま返す
+                    } else if (
+                      data.fullname
+                        .toLowerCase()
+                        .includes(searchName.toLowerCase())
+                      //valのnameが含んでいたら小文字で返す　含んでいないvalは返さない
+                    ) {
+                      return data;
+                    }
+                  })
+                  .map((user) => (
+                    <tr key={user.id}>
+                      <td>
+                        <Group spacing="xs">
+                          <Text size="sm" weight={300}>
+                            {user.fullname}
+                          </Text>
+                        </Group>
+                      </td>
+                      <td>{user.univernumber}</td>
+                      <td>{user.grade}</td>
+                      <td>{user.gender}</td>
+                      <td>{user.belong}</td>
+                      <td>
+                        <button
+                          onClick={() =>
+                            getuserID(
+                              user.id,
+                              user.fullname,
+                              user.univernumber,
+                              user.grade,
+                              user.gender,
+                              user.belong
+                            )
+                          }
+                          className="text-blue-600 underline"
+                        >
+                          編集する
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
             </tbody>
           </Table>
         </ScrollArea>

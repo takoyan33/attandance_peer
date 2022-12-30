@@ -237,7 +237,9 @@ export default function Edit() {
                     <td>{user.grade}</td>
                     <td>{user.attandece}</td>
                     <td>{meeting.length - user.attandece}</td>
-                    <td>{(user.attandece / meeting.length) * 100}%</td>
+                    <td>
+                      {((user.attandece / meeting.length) * 100).toFixed()}%
+                    </td>
                     <td>
                       <button
                         onClick={() =>
