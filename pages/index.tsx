@@ -211,7 +211,6 @@ export default function Index() {
     setIsOpen(true);
     setID(id);
     setIsUpdate(true);
-    console.log(ID);
   };
 
   //出席表の表示モーダル
@@ -238,21 +237,37 @@ export default function Index() {
 
   //出席登録の取り消しモーダル
   const closePresent = (id: any) => {
-    setID(id);
+    setID(null);
+    setTitle("");
+    setDate(null);
+    setID("");
+    setPresentnum(null);
+    setAbsentnum("");
     setIsPresent(false);
     console.log(ID);
   };
 
   //欠席登録の取り消しモーダル
   const closeabsentPresent = (id: any) => {
-    setID(id);
+    setID(null);
+    setID(null);
+    setTitle("");
+    setDate(null);
+    setID("");
+    setPresentnum(null);
+    setAbsentnum("");
     setabsentIsOpen(false);
     console.log(ID);
   };
 
   //出席登録の取り消しモーダル
   const closeaddPresent = (id: any) => {
-    setID(id);
+    setID(null);
+    setTitle("");
+    setDate(null);
+    setID("");
+    setPresentnum(null);
+    setAbsentnum("");
     setIsOpen(false);
     setIsUpdate(false);
     console.log(ID);

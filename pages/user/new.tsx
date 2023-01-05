@@ -26,12 +26,14 @@ export default function Home() {
       grade: data.grade,
       createtime: newdate,
       gender: data.gender,
-      belong: true,
+      belong: "在籍中",
       attend: 0,
     })
       .then(() => {
         notify("ユーザー登録しました");
-        router.push("/");
+        setTimeout(() => {
+          router.push("/");
+        }, 2000);
       })
       .catch((err: any) => {
         signupmissnotify("ユーザー登録に失敗しました");

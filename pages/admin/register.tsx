@@ -9,15 +9,6 @@ import { useRouter } from "next/router";
 import { query, orderBy } from "firebase/firestore";
 import { useForm } from "react-hook-form";
 import { InputBase } from "@mantine/core";
-import {
-  createStyles,
-  Table,
-  Checkbox,
-  ScrollArea,
-  Group,
-  Avatar,
-  Text,
-} from "@mantine/core";
 
 export default function Home() {
   const { register, handleSubmit } = useForm();
@@ -43,7 +34,9 @@ export default function Home() {
     })
       .then(() => {
         alert("ユーザー登録しました");
-        router.push("/");
+        setTimeout(() => {
+          router.push("/");
+        }, 2000);
       })
       .catch((err: any) => {
         console.error(err);

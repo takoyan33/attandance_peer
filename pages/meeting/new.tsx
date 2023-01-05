@@ -38,7 +38,6 @@ export default function Home() {
     })
       .then(() => {
         notify("会議を登録しました");
-        router.push("/");
       })
       .catch((err: any) => {
         signupmissnotify("会議登録に失敗しました");
