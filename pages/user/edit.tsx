@@ -124,7 +124,6 @@ export default function Edit() {
   //usersを取得
   useEffect(() => {
     const usersCollectionRef = collection(database, "users");
-
     onSnapshot(usersCollectionRef, (querySnapshot) => {
       setUsers(
         querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
@@ -165,7 +164,7 @@ export default function Edit() {
     // setBelong(belong);
   };
 
-  //出席登録の取り消しモーダル
+  //ユーザー編集の取り消しモーダル
   const closeaddPresent = (id: any) => {
     setID(null);
     setIsUpdate(false);

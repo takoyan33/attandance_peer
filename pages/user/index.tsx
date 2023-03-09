@@ -74,7 +74,7 @@ const useStyles = createStyles((theme) => ({
 export default function Edit() {
   const [meeting, setMeeting] = useState<any[]>([]);
   const [users, setUsers] = useState<any[]>([]);
-  const [attandece, setAttandece] = useState(null);
+  const [attandece, setAttandece] = useState(0);
   const [ID, setID] = useState<any>(null);
   const [isUpdate, setIsUpdate] = useState(false);
   const [fullname, setFullname] = useState("");
@@ -156,8 +156,9 @@ export default function Edit() {
             </Button>
             <h2 className="text-center text-2xl">{fullname}さんの出欠状況</h2>
 
-            <p>出席数{attandece}</p>
-            <p>欠席数</p>
+            <p className="text-center my-4">
+              出席数{attandece}　欠席数{meeting.length - attandece}
+            </p>
 
             <ScrollArea sx={{ height: 300 }}>
               <Table sx={{ minWidth: 400 }}>
@@ -181,16 +182,15 @@ export default function Edit() {
                           </Group>
                         </td>
                         <td>
-                          {meeting.attandece &&
-                            meeting.attandece.map((attend: any, i: number) => (
-                              <div key={i}>
-                                {attend === univernumber && (
-                                  <div className="mt-2">
-                                    <Checkbox transitionDuration={0} checked />
-                                  </div>
-                                )}
-                              </div>
-                            ))}
+                          {meeting.attandece.includes(univernumber) ? (
+                            <div className="mt-2">
+                              <Checkbox transitionDuration={0} checked />
+                            </div>
+                          ) : (
+                            <>
+                              <Checkbox transitionDuration={0} />
+                            </>
+                          )}
                           {meeting.attandece === univernumber ? (
                             <p></p>
                           ) : (

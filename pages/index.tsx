@@ -220,10 +220,7 @@ export default function Index() {
     setID(id);
     setPresentnum(attandece.length);
     setIsPresent(true);
-    setAbsentnum(users.length);
-    console.log("欠席者数");
-    console.log(absentnum);
-    console.log(ID);
+    setAbsentnum(users.length - attandece.length);
   };
 
   //欠席登録のモーダル表示
@@ -232,7 +229,6 @@ export default function Index() {
     setDate(date);
     setabsentIsOpen(true);
     setID(id);
-    console.log(ID);
   };
 
   //出席登録の取り消しモーダル
@@ -244,7 +240,6 @@ export default function Index() {
     setPresentnum(null);
     setAbsentnum("");
     setIsPresent(false);
-    console.log(ID);
   };
 
   //欠席登録の取り消しモーダル
@@ -257,7 +252,6 @@ export default function Index() {
     setPresentnum(null);
     setAbsentnum("");
     setabsentIsOpen(false);
-    console.log(ID);
   };
 
   //出席登録の取り消しモーダル
@@ -270,7 +264,6 @@ export default function Index() {
     setAbsentnum("");
     setIsOpen(false);
     setIsUpdate(false);
-    console.log(ID);
   };
 
   const sample_data = [
@@ -326,9 +319,6 @@ export default function Index() {
 
         {IsPresent && (
           <>
-            <h2 className="text-center">
-              {title}の{date}日の出席表
-            </h2>
             <Button
               type="submit"
               variant="outline"
@@ -337,6 +327,9 @@ export default function Index() {
             >
               出席票を閉じる
             </Button>
+            <h2 className="text-center text-2xl">
+              {date}日の{title}の出席表
+            </h2>
             <div>
               <ResponsiveContainer height={256}>
                 <PieChart margin={{ top: 0, left: 0, right: 0, bottom: 0 }}>
@@ -360,6 +353,10 @@ export default function Index() {
                   />
                 </PieChart>
               </ResponsiveContainer>
+              <p className="text-center">
+                出席数：{presentnum}人 欠席数：
+                {absentnum}人
+              </p>
             </div>
             <TextField
               type="text"
@@ -385,62 +382,52 @@ export default function Index() {
                   </tr>
                 </thead>
 
-                {meeting &&
-                  meeting.map((meeting) => (
-                    <>
-                      {meeting.id === ID && (
-                        <tbody key={meeting.id}>
-                          {users &&
-                            users
-                              .filter((data) => {
-                                if (searchName === "") {
-                                  return data;
-                                  //そのまま返す
-                                } else if (
-                                  data.fullname
-                                    .toLowerCase()
-                                    .includes(searchName.toLowerCase())
-                                  //valのnameが含んでいたら小文字で返す　含んでいないvalは返さない
-                                ) {
-                                  return data;
-                                }
-                              })
-                              .map((user) => (
-                                <tr key={user.id}>
-                                  <td>
-                                    {meeting.attandece &&
-                                      meeting.attandece.map(
-                                        (attend: any, i: number) => (
-                                          <div key={i}>
-                                            {attend === user.univernumber ? (
-                                              <div className="mt-2">
-                                                <Checkbox
-                                                  transitionDuration={0}
-                                                  checked
-                                                />
-                                              </div>
-                                            ) : (
-                                              <></>
-                                            )}
-                                          </div>
-                                        )
-                                      )}
-                                  </td>
-                                  <td>
-                                    <Group spacing="sm">
-                                      <Text size="sm" weight={500}>
-                                        {user.fullname}
-                                      </Text>
-                                    </Group>
-                                  </td>
-                                  <td>{user.univernumber}</td>
-                                  <td>{user.grade}</td>
-                                </tr>
-                              ))}
-                        </tbody>
-                      )}
-                    </>
-                  ))}
+                {meeting.map((meeting) => (
+                  <>
+                    {meeting.id === ID && (
+                      <tbody key={meeting.id}>
+                        {users
+                          .filter((data) => {
+                            if (searchName === "") {
+                              return data;
+                            } else if (
+                              data.fullname
+                                .toLowerCase()
+                                .includes(searchName.toLowerCase())
+                            ) {
+                              return data;
+                            }
+                          })
+                          .map((user) => (
+                            <tr key={user.id}>
+                              <td>
+                                {meeting.attandece.includes(
+                                  user.univernumber
+                                ) ? (
+                                  <div className="mt-2">
+                                    <Checkbox transitionDuration={0} checked />
+                                  </div>
+                                ) : (
+                                  <>
+                                    <Checkbox transitionDuration={0} />
+                                  </>
+                                )}
+                              </td>
+                              <td>
+                                <Group spacing="sm">
+                                  <Text size="sm" weight={500}>
+                                    {user.fullname}
+                                  </Text>
+                                </Group>
+                              </td>
+                              <td>{user.univernumber}</td>
+                              <td>{user.grade}</td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    )}
+                  </>
+                ))}
               </Table>
             </ScrollArea>
           </>
@@ -458,7 +445,9 @@ export default function Index() {
             </p>
             <form onSubmit={handleSubmit(updatefields)}>
               <p>
-                <label htmlFor="univernumber">学籍番号</label>
+                <label htmlFor="univernumber">
+                  学籍番号<span className="text-red-700">*</span>
+                </label>
                 <Input
                   type="number"
                   id="univernumber"
@@ -499,7 +488,9 @@ export default function Index() {
             </p>
             <form onSubmit={handleSubmit(deletefields)}>
               <p>
-                <label htmlFor="univernumber">学籍番号</label>
+                <label htmlFor="univernumber">
+                  学籍番号<span className="text-red-700">*</span>
+                </label>
                 <Input
                   type="number"
                   id="univernumber"
@@ -526,77 +517,6 @@ export default function Index() {
             </form>
           </div>
         </Modal>
-        {/* <Modal
-          contentLabel="Example Modal"
-          isOpen={modalabsentIsOpen}
-          style={customStyles}
-          onRequestClose={closeabsentModal}
-        >
-          <div>
-            <p>
-              おはようございます。<br></br>
-              {title}の{date}日の欠席登録ができます。
-            </p>
-            <ScrollArea sx={{ height: 500, minWidth: 200 }}>
-              <Table sx={{ minWidth: 200 }}>
-                <thead
-                  className={cx(classes.header, {
-                    [classes.scrolled]: scrolled,
-                  })}
-                >
-                  <tr>
-                    <th>出欠</th>
-                    <th>名前</th>
-                    <th>学籍番号</th>
-                    <th>年次</th>
-                  </tr>
-                </thead>
-                {meeting &&
-                  meeting.map((meeting) => (
-                    <>
-                      {meeting.id === ID && (
-                        <tbody key={meeting.id}>
-                          {users &&
-                            users.map((user) => (
-                              <tr key={user.id}>
-                                <td>
-                                  {meeting.attandece &&
-                                    meeting.attandece.map(
-                                      (attend: any, i: number) => (
-                                        <div key={i}>
-                                          {attend === user.univernumber ? (
-                                            <div className="mt-2">
-                                              <Checkbox
-                                                transitionDuration={0}
-                                                checked
-                                              />
-                                            </div>
-                                          ) : (
-                                            <></>
-                                          )}
-                                        </div>
-                                      )
-                                    )}
-                                </td>
-                                <td>
-                                  <Group spacing="xs">
-                                    <Text size="sm" weight={300}>
-                                      {user.fullname}
-                                    </Text>
-                                  </Group>
-                                </td>
-                                <td>{user.univernumber}</td>
-                                <td>{user.grade}</td>
-                              </tr>
-                            ))}
-                        </tbody>
-                      )}
-                    </>
-                  ))}
-              </Table>
-            </ScrollArea>
-          </div>
-        </Modal> */}
         {meeting &&
           meeting.map((meeting) => (
             <div key={meeting.id} className="my-4 w-80 m-auto text-center">

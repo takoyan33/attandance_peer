@@ -142,13 +142,23 @@ export default function Edit() {
             >
               編集を取り消す
             </Button>
+            {/* <Button
+              type="submit"
+              variant="outline"
+              color="cyan"
+              onClick={closeaddPresent}
+            >
+              会議を削除する
+            </Button> */}
             <h2 className="text-center text-2xl">
               {date}
               {title}の編集画面
             </h2>
             <form onSubmit={handleSubmit(updatefields)}>
               <div className="max-w-5xl m-auto">
-                <label htmlFor="title">会議名*</label>
+                <label htmlFor="title">
+                  会議名<span className="text-red-700">*</span>
+                </label>
                 <Input
                   type="text"
                   id="title"
@@ -156,7 +166,9 @@ export default function Edit() {
                 />
               </div>
               <div>
-                <label htmlFor="date">日付*</label>
+                <label htmlFor="date">
+                  日付<span className="text-red-700">*</span>
+                </label>
                 <Input
                   type="date"
                   id="date"

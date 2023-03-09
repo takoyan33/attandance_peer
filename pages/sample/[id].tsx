@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/alt-text */
 import { useRouter } from "next/router";
 import React from "react";
 
