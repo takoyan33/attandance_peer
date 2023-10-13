@@ -6,10 +6,10 @@ import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { Button } from "@mantine/core";
 import { InputBase } from "@mantine/core";
-import { MuiNavbar } from "../../components/MuiNavbar";
+import { MuiNavbar } from "../../stories/components/CommonHeader";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { notify, signupmissnotify } from "../../components/SiteModal";
+import { notify, signupmissnotify } from "../../stories/components/SiteModal";
 
 export default function Home() {
   const { register, handleSubmit } = useForm();

@@ -26,11 +26,11 @@ import {
   Avatar,
   Text,
 } from "@mantine/core";
-import { MuiNavbar } from "../components/MuiNavbar";
+import { CommonHeader } from "../stories/components/CommonHeader";
 import Modal from "react-modal";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { notify, signupmissnotify } from "../components/SiteModal";
+import { notify, signupmissnotify } from "../stories/components/SiteModal";
 import TextField from "@mui/material/TextField";
 
 const useStyles = createStyles((theme) => ({
@@ -309,12 +309,13 @@ export default function Index() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <MuiNavbar />
+      <CommonHeader />
       <div className="max-w-5xl m-auto" id="APP">
         <ToastContainer />
         <h2 className="text-center text-2xl font-bold mb-6 mt-10">
           ピアサポータル出席管理
         </h2>
+        <div className="bg-orange-500 w-14 h-14 p-2 rounded-full">aaa</div>
         <h2 className="text-center">会議一覧{meeting.length}件</h2>
 
         {IsPresent && (

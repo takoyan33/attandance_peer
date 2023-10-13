@@ -9,7 +9,7 @@ import { collection, addDoc, onSnapshot, getDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { query, orderBy } from "firebase/firestore";
 import { useForm } from "react-hook-form";
-import { MuiNavbar } from "../../components/MuiNavbar";
+import { MuiNavbar } from "../../stories/components/CommonHeader";
 import { doc, updateDoc } from "firebase/firestore";
 import moment from "moment";
 import {
@@ -23,7 +23,7 @@ import {
 } from "@mantine/core";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { notify, signupmissnotify } from "../../components/SiteModal";
+import { notify, signupmissnotify } from "../../stories/components/SiteModal";
 
 export default function Edit() {
   const {

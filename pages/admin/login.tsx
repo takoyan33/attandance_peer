@@ -8,10 +8,10 @@ import { Input } from "@mantine/core";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { InputBase, Button } from "@mantine/core";
-import { MuiNavbar } from "../../components/MuiNavbar";
+import { MuiNavbar } from "../../stories/components/CommonHeader";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { notify, signupmissnotify } from "../../components/SiteModal";
+import { notify, signupmissnotify } from "../../stories/components/SiteModal";
 
 export default function Login() {
   const { register, handleSubmit } = useForm();

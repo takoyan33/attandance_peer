@@ -8,7 +8,7 @@ import { collection, onSnapshot, getDoc } from "firebase/firestore";
 import TextField from "@mui/material/TextField";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
-import { MuiNavbar } from "../../components/MuiNavbar";
+import { MuiNavbar } from "../../stories/components/CommonHeader";
 import { doc, updateDoc } from "firebase/firestore";
 import { InputBase } from "@mantine/core";
 import {
@@ -21,7 +21,7 @@ import {
 } from "@mantine/core";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { notify, signupmissnotify } from "../../components/SiteModal";
+import { notify, signupmissnotify } from "../../stories/components/SiteModal";
 
 const useStyles = createStyles((theme) => ({
   card: {

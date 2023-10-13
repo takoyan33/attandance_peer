@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { database } from "../../firebaseConfig";
 import { collection, addDoc, onSnapshot, getDocs } from "firebase/firestore";
 import { query, orderBy } from "firebase/firestore";
-import { MuiNavbar } from "../../components/MuiNavbar";
+import { MuiNavbar } from "../../stories/components/CommonHeader";
 import {
   createStyles,
   Table,
