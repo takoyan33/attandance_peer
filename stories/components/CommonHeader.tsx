@@ -36,9 +36,7 @@ export const CommonHeader = () => {
       .then(() => {
         router.push("/");
       })
-      .catch((error) => {
-        // An error happened.
-      });
+      .catch((error) => {});
   };
 
   return (

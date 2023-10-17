@@ -32,6 +32,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { notify, signupmissnotify } from "../stories/components/SiteModal";
 import TextField from "@mui/material/TextField";
+import { MeetingStatus } from "../stories/components/MeetingStatus";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -315,9 +316,8 @@ export default function Index() {
         <h2 className="text-center text-2xl font-bold mb-6 mt-10">
           ピアサポータル出席管理
         </h2>
-        <div className="bg-orange-500 w-14 h-14 p-2 rounded-full">aaa</div>
         <h2 className="text-center">会議一覧{meeting.length}件</h2>
-
+        <div className={`bg-orange-500  w-14 h-14 p-2 rounded-full`}></div>
         {IsPresent && (
           <>
             <Button
@@ -525,18 +525,7 @@ export default function Index() {
                 <Text size="xl" weight={500} mt="md">
                   {meeting.title}
                 </Text>
-                <Text size="sm" mt="sm" color="dimmed">
-                  日付：{meeting.date}
-                  {target < meeting.date ? (
-                    <span className="m-2 bg-green-900 p-2 text-white">
-                      開催前
-                    </span>
-                  ) : (
-                    <span className="m-2 bg-blue-700 p-2 text-white">
-                      開催後
-                    </span>
-                  )}
-                </Text>
+                <MeetingStatus meetingDate={meeting.date} target={target} />
                 <Text size="sm" mt="sm" color="dimmed">
                   出席{meeting.attandece?.length}人 欠席
                   {users.length - meeting.attandece?.length}人 出席率

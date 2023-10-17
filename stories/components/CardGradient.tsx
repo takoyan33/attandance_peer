@@ -32,7 +32,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-interface CardGradientProps {
+type CardGradientProps = {
   title: string;
   date: string;
   present: string;
@@ -40,7 +40,7 @@ interface CardGradientProps {
   wariai: any;
   id: any;
   onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
-}
+};
 
 export function CardGradient({
   title,
