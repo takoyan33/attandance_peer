@@ -8,7 +8,7 @@ import { Input } from "@mantine/core";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { InputBase, Button } from "@mantine/core";
-import { MuiNavbar } from "../../stories/components/CommonHeader";
+import { CommonHeader } from "../../stories/components/CommonHeader";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { notify, signupmissnotify } from "../../stories/components/SiteModal";
@@ -42,7 +42,7 @@ export default function Login() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <MuiNavbar />
+      <CommonHeader />
       <ToastContainer />
       <div className="max-w-4xl m-auto mt-10">
         <h2 className="text-center">管理者ログイン</h2>

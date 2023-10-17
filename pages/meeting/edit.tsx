@@ -9,7 +9,7 @@ import { collection, addDoc, onSnapshot, getDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { query, orderBy } from "firebase/firestore";
 import { useForm } from "react-hook-form";
-import { MuiNavbar } from "../../stories/components/CommonHeader";
+import { CommonHeader } from "../../stories/components/CommonHeader";
 import { doc, updateDoc } from "firebase/firestore";
 import moment from "moment";
 import {
@@ -124,7 +124,7 @@ export default function Edit() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <MuiNavbar />
+      <CommonHeader />
       <ToastContainer />
       <div className="max-w-5xl m-auto">
         <h2 className="text-center text-2xl font-bold mb-6 mt-10">

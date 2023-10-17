@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { database } from "../../firebaseConfig";
 import { collection, addDoc, onSnapshot, getDocs } from "firebase/firestore";
 import { query, orderBy } from "firebase/firestore";
-import { MuiNavbar } from "../../stories/components/CommonHeader";
+import { CommonHeader } from "../../stories/components/CommonHeader";
 import {
   createStyles,
   Table,
@@ -136,7 +136,7 @@ export default function Edit() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <MuiNavbar />
+      <CommonHeader />
       <div className="max-w-5xl m-auto">
         <h2 className="text-center text-2xl font-bold mb-6 mt-10">
           ユーザーの出席状況を確認する

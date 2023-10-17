@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { Button } from "@mantine/core";
 import { InputBase } from "@mantine/core";
-import { MuiNavbar } from "../../stories/components/CommonHeader";
+import { CommonHeader } from "../../stories/components/CommonHeader";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { notify, signupmissnotify } from "../../stories/components/SiteModal";
@@ -50,7 +50,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <MuiNavbar />
+      <CommonHeader />
       <ToastContainer />
       <div className="max-w-5xl m-auto">
         <h2 className="text-center text-2xl font-bold mb-6 mt-10">

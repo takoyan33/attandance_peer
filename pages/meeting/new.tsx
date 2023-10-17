@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { query, orderBy } from "firebase/firestore";
 import { useForm } from "react-hook-form";
 import { Input } from "@mantine/core";
-import { MuiNavbar } from "../../stories/components/CommonHeader";
+import { CommonHeader } from "../../stories/components/CommonHeader";
 import { Button } from "@mantine/core";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -64,7 +64,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <MuiNavbar />
+      <CommonHeader />
       <ToastContainer />
       <div className="max-w-5xl m-auto">
         <h2 className="text-center text-2xl font-bold mb-6 mt-10">
