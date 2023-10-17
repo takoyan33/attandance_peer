@@ -12,14 +12,14 @@ type Story = StoryObj<typeof meta>;
 
 export const BeforeStatus: Story = {
   args: {
-    target: 1211,
-    text: "1",
+    meetingDate: new Date("2023-10-17"),
+    target: new Date("2023-10-15"),
   },
 };
 
 export const AfterStatus: Story = {
   args: {
-    target: 911,
-    text: "2",
+    meetingDate: new Date("2023-10-17"),
+    target: new Date("2023-10-18"),
   },
 };

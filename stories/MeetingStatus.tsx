@@ -1,16 +1,15 @@
 import React from "react";
-
 interface MeetingStatusProps {
-  target: any;
-  text: string; // プロパティの型を指定する
+  meetingDate: Date;
+  target: Date;
 }
 
 export const MeetingStatus: React.FC<MeetingStatusProps> = ({
+  meetingDate,
   target,
-  text,
 }) => {
   let statusClassName: string;
-  if (1100 < target) {
+  if (target < meetingDate) {
     statusClassName = "bg-green-900";
   } else {
     statusClassName = "bg-blue-700";
@@ -18,9 +17,9 @@ export const MeetingStatus: React.FC<MeetingStatusProps> = ({
 
   return (
     <div>
-      日付：11時00分
+      日付：{target.toDateString()}
       <span className={`m-2 p-2 text-white ${statusClassName}`}>
-        {1100 < target ? "開催前" : "開催後"}
+        {target < meetingDate ? "開催前" : "開催後"}
       </span>
     </div>
   );

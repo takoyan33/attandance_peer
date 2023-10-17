@@ -1,7 +1,7 @@
 import React from "react";
 interface MeetingStatusProps {
-  meetingDate: string;
-  target: string;
+  meetingDate: any;
+  target: any;
 }
 
 export const MeetingStatus: React.FC<MeetingStatusProps> = ({
