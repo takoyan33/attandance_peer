@@ -25,19 +25,19 @@ export const CommonHeader = () => {
     setAnchorEl(null);
   };
 
-  // const router = useRouter();
-  // const auth = getAuth();
-  // const user = auth.currentUser;
+  const router = useRouter();
+  const auth = getAuth();
+  const user = auth.currentUser;
 
-  // const logout = () => {
-  //   localStorage.removeItem("Token");
+  const logout = () => {
+    localStorage.removeItem("Token");
 
-  //   signOut(auth)
-  //     .then(() => {
-  //       router.push("/");
-  //     })
-  //     .catch((error) => {});
-  // };
+    signOut(auth)
+      .then(() => {
+        router.push("/");
+      })
+      .catch((error) => {});
+  };
 
   return (
     <AppBar position="static" color="transparent" className="w-full m-0">
