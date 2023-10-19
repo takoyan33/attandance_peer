@@ -3,6 +3,7 @@ import { CommonButton } from "./components/CommonButton";
 const meta: Meta<typeof CommonButton> = {
   component: CommonButton,
   title: "CommonButton",
+  tags: ["autodocs"],
 };
 
 export default meta;

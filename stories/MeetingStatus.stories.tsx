@@ -4,6 +4,7 @@ import { MeetingStatus } from "./MeetingStatus";
 const meta: Meta<typeof MeetingStatus> = {
   component: MeetingStatus,
   title: "MeetingStatus",
+  tags: ["autodocs"],
 };
 
 export default meta;
