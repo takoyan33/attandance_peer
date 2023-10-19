@@ -33,6 +33,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { notify, signupmissnotify } from "../stories/components/SiteModal";
 import TextField from "@mui/material/TextField";
 import { MeetingStatus } from "../stories/components/MeetingStatus";
+import { CommonButton } from "../stories/components/CommonButton";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -317,17 +318,13 @@ export default function Index() {
           ピアサポータル出席管理
         </h2>
         <h2 className="text-center">会議一覧{meeting.length}件</h2>
-        <div className={`bg-orange-500  w-14 h-14 p-2 rounded-full`}></div>
         {IsPresent && (
           <>
-            <Button
-              type="submit"
-              variant="outline"
-              color="cyan"
+            <CommonButton
+              text="出席票を閉じる"
+              classNameText="bg-blue-500 hover:bg-blue-700"
               onClick={() => closePresent(ID)}
-            >
-              出席票を閉じる
-            </Button>
+            />
             <h2 className="text-center text-2xl">
               {date}日の{title}の出席表
             </h2>
@@ -457,19 +454,17 @@ export default function Index() {
               </p>
               <div className="text-center m-auto my-4">
                 <span className="m-2">
-                  <Button type="submit" variant="outline" color="cyan">
-                    出席登録する
-                  </Button>
+                  <CommonButton
+                    text="出席登録する"
+                    classNameText="bg-blue-500 hover:bg-blue-700"
+                  />
                 </span>
                 <span className="m-2">
-                  <Button
-                    type="submit"
-                    variant="outline"
-                    color="cyan"
+                  <CommonButton
+                    text="取り消し"
                     onClick={closeaddPresent}
-                  >
-                    取り消し
-                  </Button>
+                    classNameText="bg-red-500 hover:bg-red-700"
+                  />
                 </span>
               </div>
             </form>
@@ -500,9 +495,7 @@ export default function Index() {
               </p>
               <div className="text-center m-auto my-4">
                 <span className="m-2">
-                  <Button type="submit" variant="outline" color="cyan">
-                    欠席登録する
-                  </Button>
+                  <CommonButton text="欠席登録する" />
                 </span>
                 <span className="m-2">
                   <Button
@@ -536,31 +529,26 @@ export default function Index() {
                   {meeting.body}
                 </Text>
                 <div className="my-4 m-auto text-center">
-                  <Button
-                    variant="outline"
-                    color="cyan"
+                  <CommonButton
+                    text="出席登録する"
                     onClick={() =>
                       getID(meeting.id, meeting.date, meeting.title)
                     }
-                  >
-                    出席登録する
-                  </Button>
+                    classNameText="bg-blue-500 hover:bg-blue-700"
+                  />
                 </div>
                 <div className="my-4 m-auto text-center">
-                  <Button
-                    variant="outline"
-                    color="cyan"
+                  <CommonButton
+                    text="欠席に変更する"
                     onClick={() =>
                       getabesentPresent(meeting.id, meeting.date, meeting.title)
                     }
-                  >
-                    欠席に変更する
-                  </Button>
+                    classNameText="bg-red-500 hover:bg-red-700"
+                  />
                 </div>
                 <div className="my-4 m-auto text-center">
-                  <Button
-                    variant="outline"
-                    color="cyan"
+                  <CommonButton
+                    text="出席票を見る"
                     onClick={() =>
                       getPresent(
                         meeting.id,
@@ -569,9 +557,8 @@ export default function Index() {
                         meeting.attandece
                       )
                     }
-                  >
-                    出席票を見る
-                  </Button>
+                    classNameText="bg-blue-500 hover:bg-blue-700"
+                  />
                 </div>
               </Paper>
             </div>
