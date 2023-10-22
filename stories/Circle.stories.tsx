@@ -3,7 +3,7 @@ import Circle from "./Circle";
 
 const meta: Meta<typeof Circle> = {
   component: Circle,
-  title: "Circle",
+  title: "円",
   argTypes: {
     variant: {
       control: {
@@ -11,6 +11,10 @@ const meta: Meta<typeof Circle> = {
       },
       options: ["orange", "green", "yellow"],
     },
+  },
+  tags: ["autodocs"],
+  parameters: {
+    componentSubtitle: "共通ボタンは、サイト内で使われるボタンです",
   },
 };
 
