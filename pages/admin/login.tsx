@@ -12,6 +12,9 @@ import { CommonHeader } from "../../stories/components/CommonHeader";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { notify, signupmissnotify } from "../../stories/components/SiteModal";
+import { CommonLabel } from "../../stories/components/CommonLabel";
+import { CommonTitle } from "../../stories/components/CommonTitle";
+import { CommonButton } from "../../stories/components/CommonButton";
 
 export default function Login() {
   const { register, handleSubmit } = useForm();
@@ -45,21 +48,25 @@ export default function Login() {
       <CommonHeader />
       <ToastContainer />
       <div className="max-w-4xl m-auto mt-10">
-        <h2 className="text-center">管理者ログイン</h2>
-
+        <CommonTitle title="管理者ログイン" />
         <div>
           <form onSubmit={handleSubmit(SignIn)}>
             <div>
-              <label htmlFor="email">メールアドレス</label>
+              <CommonLabel
+                labelText="メールアドレス"
+                required
+                htmlfor="email"
+              />
               <Input type="email" id="email" {...register("email")} />
             </div>
 
-            <label htmlFor="password">パスワード</label>
+            <CommonLabel labelText="パスワード" required htmlfor="password" />
             <Input type="password" id="password" {...register("password")} />
             <div className="my-4 m-auto text-center">
-              <Button type="submit" variant="outline" color="cyan">
-                ログインする
-              </Button>
+              <CommonButton
+                text="ログインする"
+                classNameText="bg-blue-500 hover:bg-blue-700"
+              />
             </div>
           </form>
         </div>

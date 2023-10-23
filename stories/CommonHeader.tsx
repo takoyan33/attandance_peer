@@ -15,7 +15,7 @@ import React from "react";
 import Tooltip from "@mui/material/Tooltip";
 import Image from "next/image";
 
-export const CommonHeader = () => {
+export const CommonHeader = (user) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -25,18 +25,13 @@ export const CommonHeader = () => {
     setAnchorEl(null);
   };
 
-  const router = useRouter();
-  const auth = getAuth();
-  const user = auth.currentUser;
-
   const logout = () => {
-    localStorage.removeItem("Token");
-
-    signOut(auth)
-      .then(() => {
-        router.push("/");
-      })
-      .catch((error) => {});
+    // localStorage.removeItem("Token");
+    // signOut(auth)
+    //   .then(() => {
+    //     router.push("/");
+    //   })
+    //   .catch((error) => {});
   };
 
   return (

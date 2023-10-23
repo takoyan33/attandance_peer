@@ -14,7 +14,6 @@ import {
 import { useRouter } from "next/router";
 import { query, orderBy } from "firebase/firestore";
 import { useForm } from "react-hook-form";
-import { Button } from "@mantine/core";
 import { Input } from "@mantine/core";
 import { Legend, PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import {
@@ -34,6 +33,8 @@ import { notify, signupmissnotify } from "../stories/components/SiteModal";
 import TextField from "@mui/material/TextField";
 import { MeetingStatus } from "../stories/components/MeetingStatus";
 import { CommonButton } from "../stories/components/CommonButton";
+import { CommonLabel } from "../stories/components/CommonLabel";
+import { CommonTitle } from "../stories/components/CommonTitle";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -103,15 +104,15 @@ const customStyles = {
 export default function Index() {
   let subtitle: HTMLHeadingElement | null;
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
-  const [modalabsentIsOpen, setabsentIsOpen] = useState<boolean>(false);
+  const [modalabsentIsOpen, setAbsentIsOpen] = useState<boolean>(false);
   const [searchName, setSearchName] = useState("");
 
   function closeModal() {
     setIsOpen(false);
   }
 
-  function closeabsentModal() {
-    setabsentIsOpen(false);
+  function closeAbsentModal() {
+    setAbsentIsOpen(false);
   }
 
   type FormData = {
@@ -133,20 +134,18 @@ export default function Index() {
   const target = moment().format("YYYY-MM-DD");
 
   //出席を登録する
-  const updatefields = (data: FormData) => {
+  const updateFields = (data: FormData) => {
     const userid = users.filter((user) => {
       return user.univernumber == data.univernumber;
     });
-    console.log(userid[0].id);
-    console.log(userid[0].attandece);
     //更新する
     let fieldToEdit = doc(database, "meeting", ID);
-    let usersToEdit = doc(database, "users", userid[0].id);
     //セットしたIDをセットする
     updateDoc(fieldToEdit, {
       attandece: arrayUnion(data.univernumber),
     })
       .then(() => {
+        let usersToEdit = doc(database, "users", userid[0].id);
         updateDoc(usersToEdit, {
           attandece: userid[0].attandece + 1,
         })
@@ -162,6 +161,7 @@ export default function Index() {
           });
       })
       .catch((err) => {
+        signupmissnotify("学籍番号が間違っています");
         console.log(err);
       });
   };
@@ -176,7 +176,7 @@ export default function Index() {
     })
       .then(() => {
         setIsUpdate(false);
-        setabsentIsOpen(false);
+        setAbsentIsOpen(false);
         notify("欠席に変更しました");
         router.push("/");
       })
@@ -229,7 +229,7 @@ export default function Index() {
   const getabesentPresent = (id: any, date: any, title: any) => {
     setTitle(title);
     setDate(date);
-    setabsentIsOpen(true);
+    setAbsentIsOpen(true);
     setID(id);
   };
 
@@ -253,7 +253,7 @@ export default function Index() {
     setID("");
     setPresentnum(null);
     setAbsentnum("");
-    setabsentIsOpen(false);
+    setAbsentIsOpen(false);
   };
 
   //出席登録の取り消しモーダル
@@ -314,9 +314,8 @@ export default function Index() {
       <CommonHeader />
       <div className="max-w-5xl m-auto" id="APP">
         <ToastContainer />
-        <h2 className="text-center text-2xl font-bold mb-6 mt-10">
-          ピアサポータル出席管理
-        </h2>
+
+        <CommonTitle title="ピアサポータル出席管理" />
         <h2 className="text-center">会議一覧{meeting.length}件</h2>
         {IsPresent && (
           <>
@@ -441,11 +440,13 @@ export default function Index() {
               おはようございます。<br></br>
               {title}の{date}日の出席登録ができます。
             </p>
-            <form onSubmit={handleSubmit(updatefields)}>
+            <form onSubmit={handleSubmit(updateFields)}>
               <p>
-                <label htmlFor="univernumber">
-                  学籍番号<span className="text-red-700">*</span>
-                </label>
+                <CommonLabel
+                  labelText="学籍番号"
+                  required
+                  htmlfor="univernumber"
+                />
                 <Input
                   type="number"
                   id="univernumber"
@@ -475,7 +476,7 @@ export default function Index() {
           contentLabel="Example Modal"
           isOpen={modalabsentIsOpen}
           style={customStyles}
-          onRequestClose={closeabsentModal}
+          onRequestClose={closeAbsentModal}
         >
           <div>
             <p>
@@ -483,29 +484,31 @@ export default function Index() {
               {title}の{date}日の欠席登録ができます。
             </p>
             <form onSubmit={handleSubmit(deletefields)}>
-              <p>
-                <label htmlFor="univernumber">
-                  学籍番号<span className="text-red-700">*</span>
-                </label>
+              <>
+                <CommonLabel
+                  labelText="学籍番号"
+                  required
+                  htmlfor="univernumber"
+                />
                 <Input
                   type="number"
                   id="univernumber"
                   {...register("univernumber")}
                 />
-              </p>
+              </>
               <div className="text-center m-auto my-4">
                 <span className="m-2">
-                  <CommonButton text="欠席登録する" />
+                  <CommonButton
+                    text="欠席登録する"
+                    classNameText="bg-blue-500 hover:bg-blue-700"
+                  />
                 </span>
                 <span className="m-2">
-                  <Button
-                    type="submit"
-                    variant="outline"
-                    color="cyan"
+                  <CommonButton
+                    text="取り消し"
                     onClick={closeabsentPresent}
-                  >
-                    取り消し
-                  </Button>
+                    classNameText="bg-red-500 hover:bg-red-700"
+                  />
                 </span>
               </div>
             </form>
