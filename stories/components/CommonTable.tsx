@@ -12,9 +12,7 @@ type CommonButtonProps = {
 export const CommonButton = ({
   text,
   onClick,
-  href,
   classNameText,
-  disabled,
 }: CommonButtonProps) => {
   return (
     <button

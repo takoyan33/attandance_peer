@@ -7,7 +7,6 @@ import {
 import { Input } from "@mantine/core";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
-import { InputBase, Button } from "@mantine/core";
 import { CommonHeader } from "../../stories/components/CommonHeader";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -15,6 +14,7 @@ import { notify, signupmissnotify } from "../../stories/components/SiteModal";
 import { CommonLabel } from "../../stories/components/CommonLabel";
 import { CommonTitle } from "../../stories/components/CommonTitle";
 import { CommonButton } from "../../stories/components/CommonButton";
+import { CommonInput } from "../../stories/components/CommonInput";
 
 export default function Login() {
   const { register, handleSubmit } = useForm();
@@ -57,11 +57,11 @@ export default function Login() {
                 required
                 htmlfor="email"
               />
-              <Input type="email" id="email" {...register("email")} />
+              <CommonInput type="email" id="email" register={register} />
             </div>
 
             <CommonLabel labelText="パスワード" required htmlfor="password" />
-            <Input type="password" id="password" {...register("password")} />
+            <CommonInput type="password" id="password" register={register} />
             <div className="my-4 m-auto text-center">
               <CommonButton
                 text="ログインする"

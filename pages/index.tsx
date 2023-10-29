@@ -14,7 +14,6 @@ import {
 import { useRouter } from "next/router";
 import { query, orderBy } from "firebase/firestore";
 import { useForm } from "react-hook-form";
-import { Input } from "@mantine/core";
 import { Legend, PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import {
   createStyles,
@@ -35,6 +34,7 @@ import { MeetingStatus } from "../stories/components/MeetingStatus";
 import { CommonButton } from "../stories/components/CommonButton";
 import { CommonLabel } from "../stories/components/CommonLabel";
 import { CommonTitle } from "../stories/components/CommonTitle";
+import { CommonInput } from "../stories/components/CommonInput";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -447,10 +447,15 @@ export default function Index() {
                   required
                   htmlfor="univernumber"
                 />
-                <Input
+                {/* <Input
                   type="number"
                   id="univernumber"
                   {...register("univernumber")}
+                /> */}
+                <CommonInput
+                  type="number"
+                  id="univernumber"
+                  register={register}
                 />
               </p>
               <div className="text-center m-auto my-4">
@@ -490,10 +495,15 @@ export default function Index() {
                   required
                   htmlfor="univernumber"
                 />
-                <Input
+                {/* <Input
                   type="number"
                   id="univernumber"
                   {...register("univernumber")}
+                /> */}
+                <CommonInput
+                  type="number"
+                  id="univernumber"
+                  register={register}
                 />
               </>
               <div className="text-center m-auto my-4">
