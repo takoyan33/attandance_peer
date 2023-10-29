@@ -13,7 +13,7 @@ export const notify = (text: string) =>
     theme: "light",
   });
 
-export const signupmissnotify = (text: string) =>
+export const signUpMissNotify = (text: string) =>
   toast.error(text, {
     position: "top-center",
     autoClose: 5000,

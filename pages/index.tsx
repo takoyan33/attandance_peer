@@ -28,7 +28,7 @@ import { CommonHeader } from "../stories/components/CommonHeader";
 import Modal from "react-modal";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { notify, signupmissnotify } from "../stories/components/SiteModal";
+import { notify, signUpMissNotify } from "../stories/components/SiteModal";
 import TextField from "@mui/material/TextField";
 import { MeetingStatus } from "../stories/components/MeetingStatus";
 import { CommonButton } from "../stories/components/CommonButton";
@@ -102,9 +102,8 @@ const customStyles = {
 };
 
 export default function Index() {
-  let subtitle: HTMLHeadingElement | null;
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
-  const [modalabsentIsOpen, setAbsentIsOpen] = useState<boolean>(false);
+  const [modalAbsentIsOpen, setAbsentIsOpen] = useState<boolean>(false);
   const [searchName, setSearchName] = useState("");
 
   function closeModal() {
@@ -156,12 +155,12 @@ export default function Index() {
             notify("出席登録ができました");
           })
           .catch((err) => {
-            signupmissnotify("出席登録に失敗しました");
+            signUpMissNotify("出席登録に失敗しました");
             console.log(err);
           });
       })
       .catch((err) => {
-        signupmissnotify("学籍番号が間違っています");
+        signUpMissNotify("学籍番号が間違っています");
         console.log(err);
       });
   };
@@ -181,7 +180,7 @@ export default function Index() {
         router.push("/");
       })
       .catch((err) => {
-        signupmissnotify("欠席に変更失敗しました");
+        signUpMissNotify("欠席に変更失敗しました");
         console.log(err);
       });
   };
@@ -245,7 +244,7 @@ export default function Index() {
   };
 
   //欠席登録の取り消しモーダル
-  const closeabsentPresent = (id: any) => {
+  const closeAbsentPresent = (id: any) => {
     setID(null);
     setID(null);
     setTitle("");
@@ -257,7 +256,7 @@ export default function Index() {
   };
 
   //出席登録の取り消しモーダル
-  const closeaddPresent = (id: any) => {
+  const closeAddPresent = (id: any) => {
     setID(null);
     setTitle("");
     setDate(null);
@@ -447,11 +446,6 @@ export default function Index() {
                   required
                   htmlfor="univernumber"
                 />
-                {/* <Input
-                  type="number"
-                  id="univernumber"
-                  {...register("univernumber")}
-                /> */}
                 <CommonInput
                   type="number"
                   id="univernumber"
@@ -468,7 +462,7 @@ export default function Index() {
                 <span className="m-2">
                   <CommonButton
                     text="取り消し"
-                    onClick={closeaddPresent}
+                    onClick={closeAddPresent}
                     classNameText="bg-red-500 hover:bg-red-700"
                   />
                 </span>
@@ -479,7 +473,7 @@ export default function Index() {
 
         <Modal
           contentLabel="Example Modal"
-          isOpen={modalabsentIsOpen}
+          isOpen={modalAbsentIsOpen}
           style={customStyles}
           onRequestClose={closeAbsentModal}
         >
@@ -495,11 +489,6 @@ export default function Index() {
                   required
                   htmlfor="univernumber"
                 />
-                {/* <Input
-                  type="number"
-                  id="univernumber"
-                  {...register("univernumber")}
-                /> */}
                 <CommonInput
                   type="number"
                   id="univernumber"
@@ -516,7 +505,7 @@ export default function Index() {
                 <span className="m-2">
                   <CommonButton
                     text="取り消し"
-                    onClick={closeabsentPresent}
+                    onClick={closeAbsentPresent}
                     classNameText="bg-red-500 hover:bg-red-700"
                   />
                 </span>

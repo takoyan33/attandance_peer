@@ -22,22 +22,30 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
+/** 開催前のラベル */
 export const BeforeStatus: Story = {
   args: {
     meetingDate: new Date("2023-10-17"),
     target: new Date("2023-10-15"),
   },
-};
-
-BeforeStatus.parameters = {
-  docs: {
-    storyDescription: "通常のボタンです",
+  parameters: {
+    docs: {
+      canvas: { sourceState: "shown" },
+      // source: { type: "code" },
+    },
   },
 };
 
+/** 開催後のラベル */
 export const AfterStatus: Story = {
   args: {
     meetingDate: new Date("2023-10-17"),
     target: new Date("2023-10-18"),
+  },
+  parameters: {
+    docs: {
+      canvas: { sourceState: "shown" },
+      // source: { type: "code" },
+    },
   },
 };

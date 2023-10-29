@@ -10,7 +10,7 @@ import { useForm } from "react-hook-form";
 import { CommonHeader } from "../../stories/components/CommonHeader";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { notify, signupmissnotify } from "../../stories/components/SiteModal";
+import { notify, signUpMissNotify } from "../../stories/components/SiteModal";
 import { CommonLabel } from "../../stories/components/CommonLabel";
 import { CommonTitle } from "../../stories/components/CommonTitle";
 import { CommonButton } from "../../stories/components/CommonButton";
@@ -32,7 +32,7 @@ export default function Login() {
         }, 2000);
       })
       .catch((err) => {
-        signupmissnotify("ログインできません");
+        signUpMissNotify("ログインできません");
         console.log(err);
       });
   };

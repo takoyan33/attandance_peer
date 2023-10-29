@@ -27,6 +27,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
+/** 成功時のボタン */
 export const BlueButton: Story = {
   args: {
     text: "登録",
@@ -34,12 +35,7 @@ export const BlueButton: Story = {
   },
 };
 
-BlueButton.parameters = {
-  docs: {
-    storyDescription: "通常のボタンです",
-  },
-};
-
+/** キャンセルの処理で使うボタン */
 export const RedButton: Story = {
   args: {
     text: "取り消し",

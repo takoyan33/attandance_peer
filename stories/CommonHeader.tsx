@@ -15,7 +15,7 @@ import React from "react";
 import Tooltip from "@mui/material/Tooltip";
 import Image from "next/image";
 
-export const CommonHeader = (user) => {
+export const CommonHeader = (user: any) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
